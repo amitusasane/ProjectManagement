@@ -1,0 +1,11 @@
+{
+    "editor.wordWrap": "on",
+    "prettier.jsxSingleQuote": true,
+    "prettier.printWidth": 100,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": false,
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    }
+}
