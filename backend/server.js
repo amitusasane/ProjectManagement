@@ -25,27 +25,9 @@ connection.once('open', function() {
 //   });
 // });
 
-// todoRoutes.route('/update/:id').post(function(req, res) {
-//   Todo.findById(req.params.id, function(err, todo) {
-//     if (!todo) res.status(404).send('data is not found');
-//     else todo.todo_description = req.body.todo_description;
-//     todo.todo_responsible = req.body.todo_responsible;
-//     todo.todo_priority = req.body.todo_priority;
-//     todo.todo_completed = req.body.todo_completed;
-
-//     todo
-//       .save()
-//       .then(todo => {
-//         res.json('Todo updated!');
-//       })
-//       .catch(err => {
-//         res.status(400).send('Update not possible');
-//       });
-//   });
-// });
-
 //-----------------------------------------------------------------------------
-// Add User routes
+// User routes
+//1 . Fetch All users
 userRoutes.route('/').get(function(req, res) {
   User.find(function(err, resp) {
     if (err) {
@@ -56,6 +38,7 @@ userRoutes.route('/').get(function(req, res) {
   });
 });
 
+//2. Add new user
 userRoutes.route('/add').post(function(req, res) {
   let user = new User(req.body);
   user
@@ -66,6 +49,41 @@ userRoutes.route('/add').post(function(req, res) {
     .catch(err => {
       res.status(400).send('Adding new user failed');
     });
+});
+
+//3. Update user by Id
+userRoutes.route('/update/:id').post(function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if (!user) res.status(404).send('User data is not found');
+    else user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.empId = req.body.empId;
+
+    user
+      .save()
+      .then(user => {
+        res.json({ message: 'User updated successfully' });
+      })
+      .catch(err => {
+        res.status(400).send('User Update not possible');
+      });
+  });
+});
+
+//4. Delete user by Id
+userRoutes.route('/delete/:id').get(function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if (!user) res.status(404).send('User data is not found');
+    else
+      user
+        .remove({ _id: req.params.id })
+        .then(user => {
+          res.json({ message: 'User deleted successfully' });
+        })
+        .catch(err => {
+          res.status(400).send('User deletion not possible');
+        });
+  });
 });
 
 app.use('/user', userRoutes);

@@ -18,3 +18,17 @@ export const addNewUser = async user => {
     .then(resp => resp.data)
     .catch(err => Promise.reject(err));
 };
+
+export const updateUserById = async user => {
+  return axios
+    .post(`${apiPath}/user/update/${user.userId}`, user, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+export const deleteUserById = async user => {
+  return axios
+    .get(`${apiPath}/user/delete/${user._id}`, user, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};

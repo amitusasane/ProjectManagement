@@ -1,20 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, FormControl, Button } from 'react-bootstrap';
+import { Container, Row, Col, FormControl, Button, ListGroup, Alert } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import './AddUser.scss';
 
-import { getAllUsers, addNewUser } from '../../api/Api';
+import { getAllUsers, addNewUser, updateUserById, deleteUserById } from '../../api/Api';
 
 const AddUser = () => {
-  const [userUpdated, setUserUpdated] = useState(false);
+  let [userUpdated, setUserUpdated] = useState(false);
+  let [users, setUsers] = useState([]);
+
+  let [editMode, setEditMode] = useState(false);
+  let [userId, setUserId] = useState('');
+  let [firstName, setFirstName] = useState('');
+  let [lastName, setLastName] = useState('');
+  let [empId, setEmpId] = useState('');
+  let [statusMessage, setStatusMessage] = useState({ show: false, message: '', variant: '' });
+
   async function fetchAllUsers() {
     try {
-      const userList = await getAllUsers();
+      setUsers(await getAllUsers());
       setUserUpdated(false);
-      userList.map(user => console.log(user.firstName + '::' + user.lastName + '::' + user.empId));
     } catch (err) {
-      console.log('Error' + err);
+      setStatusMessage({ ...statusMessage, show: true, message: err, variant: 'danger' });
     }
+  }
+  function editUser(user) {
+    setEditMode(true);
+    setUserId(user._id);
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmpId(user.empId);
+  }
+
+  async function deleteUser(user) {
+    try {
+      const resp = await deleteUserById(user);
+      setUserUpdated(true);
+      setStatusMessage({
+        ...statusMessage,
+        show: true,
+        message: resp.message,
+        variant: 'success'
+      });
+    } catch (err) {
+      setStatusMessage({
+        ...statusMessage,
+        show: true,
+        message: err,
+        variant: 'danger'
+      });
+    }
+  }
+
+  function resetFormState() {
+    setFirstName('');
+    setLastName('');
+    setEmpId('');
+    setEditMode(false);
   }
 
   useEffect(() => {
@@ -22,10 +65,12 @@ const AddUser = () => {
   }, [userUpdated]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      firstName: '',
-      lastName: '',
-      empId: ''
+      userId: userId,
+      firstName: firstName,
+      lastName: lastName,
+      empId: empId
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('Please enter First Name'),
@@ -33,27 +78,48 @@ const AddUser = () => {
       empId: Yup.string().required('Please enter Employee ID')
     }),
     onSubmit: async value => {
-      console.log(value);
       try {
-        const resp = await addNewUser(value);
+        const resp = !editMode ? await addNewUser(value) : await updateUserById(value);
         setUserUpdated(true);
-        console.log(resp.message);
+        setStatusMessage({
+          ...statusMessage,
+          show: true,
+          message: resp.message,
+          variant: 'success'
+        });
       } catch (err) {
-        console.log('Error' + err);
+        setStatusMessage({
+          ...statusMessage,
+          show: true,
+          message: err,
+          variant: 'danger'
+        });
       }
+      resetFormState();
       formik.resetForm();
     }
   });
+
   return (
     <>
       <Container>
         <Row>
-          <Col className='mt-5'>
+          <Col className="mt-5">
+            <Alert
+              variant={statusMessage.variant}
+              show={statusMessage.show}
+              onClose={() => {
+                setStatusMessage({ ...statusMessage, show: false });
+              }}
+              dismissible
+            >
+              {statusMessage.message}
+            </Alert>
             <form onSubmit={formik.handleSubmit}>
               <FormControl
                 required
-                placeholder='FirstName'
-                name='firstName'
+                placeholder="FirstName"
+                name="firstName"
                 errors={formik.errors.firstName}
                 className={
                   formik.touched.firstName
@@ -64,10 +130,10 @@ const AddUser = () => {
                 }
                 {...formik.getFieldProps('firstName')}
               ></FormControl>
-              <FormControl.Feedback type='invalid'>{formik.errors.firstName}</FormControl.Feedback>
+              <FormControl.Feedback type="invalid">{formik.errors.firstName}</FormControl.Feedback>
               <FormControl
-                placeholder='LastName'
-                name='lastName'
+                placeholder="LastName"
+                name="lastName"
                 required
                 errors={formik.errors.lastName}
                 {...formik.getFieldProps('lastName')}
@@ -79,10 +145,10 @@ const AddUser = () => {
                     : 'mb-2 mt-2'
                 }
               ></FormControl>
-              <FormControl.Feedback type='invalid'>{formik.errors.lastName}</FormControl.Feedback>
+              <FormControl.Feedback type="invalid">{formik.errors.lastName}</FormControl.Feedback>
               <FormControl
-                placeholder='Employee ID'
-                name='empId'
+                placeholder="Employee ID"
+                name="empId"
                 required
                 errors={formik.errors.empId}
                 {...formik.getFieldProps('empId')}
@@ -94,19 +160,20 @@ const AddUser = () => {
                     : 'mb-2 mt-2'
                 }
               ></FormControl>
-              <FormControl.Feedback type='invalid'>{formik.errors.empId}</FormControl.Feedback>
-              <div className='float-right'>
+              <FormControl.Feedback type="invalid">{formik.errors.empId}</FormControl.Feedback>
+              <div className="float-right">
                 <Button
-                  variant='primary'
+                  variant="primary"
                   disabled={!formik.isValid || !formik.dirty}
-                  type='submit'
-                  className='ml-2 mr-2'
+                  type="submit"
+                  className="ml-2 mr-2"
                 >
-                  Add
+                  {editMode ? 'Update' : 'Add'}
                 </Button>
                 <Button
-                  variant='outline-secondary'
+                  variant="outline-secondary"
                   onClick={() => {
+                    resetFormState();
                     formik.resetForm();
                   }}
                 >
@@ -114,6 +181,39 @@ const AddUser = () => {
                 </Button>
               </div>
             </form>
+          </Col>
+        </Row>
+        <hr />
+        <Row>
+          <Col>
+            <ListGroup>
+              {users.map(user => {
+                return (
+                  <ListGroup.Item className="user-list" key={user._id}>
+                    <div>
+                      <p>FirstName : {user.firstName}</p>
+                      <p>LastName : {user.lastName}</p>
+                      <p>Employee ID : {user.empId}</p>
+                    </div>
+                    <div>
+                      <Button variant="outline-primary" onClick={() => editUser(user)}>
+                        Edit
+                      </Button>
+                      <br />
+                      <Button
+                        variant="outline-secondary"
+                        className="mt-2"
+                        onClick={() => {
+                          deleteUser(user);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                );
+              })}
+            </ListGroup>
           </Col>
         </Row>
       </Container>
