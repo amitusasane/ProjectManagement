@@ -18,8 +18,8 @@ const AddProject = () => {
   let [projectId, setProjectId] = useState('');
   let [projectName, setProjectName] = useState('');
 
-  let [startDate, setStartDate] = useState(initialStartDate);
-  let [endDate, setEndDate] = useState(initialEndDate);
+  let [startDate, setStartDate] = useState('');
+  let [endDate, setEndDate] = useState('');
   let [dateRequired, setDateRequired] = useState(false);
   //let [enableDate, setEnableDate] = useState(false);
 
@@ -62,8 +62,8 @@ const AddProject = () => {
     setProjectId(project._id);
     setProjectName(project.projectName);
     setDateRequired(project.dateRequired);
-    setStartDate(project.startDate ? formatDate(project.startDate) : initialStartDate);
-    setEndDate(project.endDate ? formatDate(project.endDate) : initialEndDate);
+    setStartDate(project.startDate ? formatDate(project.startDate) : '');
+    setEndDate(project.endDate ? formatDate(project.endDate) : '');
     setPriority(project.priority);
   }
 
@@ -79,8 +79,8 @@ const AddProject = () => {
 
   function resetFormState() {
     setProjectName('');
-    setStartDate(initialStartDate);
-    setEndDate(initialEndDate);
+    setStartDate('');
+    setEndDate('');
     setPriority('');
     setDateRequired(false);
     setEditMode(false);
@@ -89,8 +89,12 @@ const AddProject = () => {
   function onCheckboxChange(event) {
     if (event.target.checked) {
       setDateRequired(true);
+      setStartDate(initialStartDate);
+      setEndDate(initialEndDate);
     } else {
       setDateRequired(false);
+      setStartDate('');
+      setEndDate('');
     }
   }
 

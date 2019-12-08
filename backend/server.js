@@ -120,7 +120,7 @@ projectRoutes.route('/update/:id').post(function(req, res) {
   Project.findById(req.params.id, function(err, project) {
     if (!project) res.status(404).send('Project data is not found');
     else project.projectName = req.body.projectName;
-    project.dataRequired = req.body.dataRequired;
+    project.dateRequired = req.body.dateRequired;
     project.startDate = req.body.startDate;
     project.endDate = req.body.endDate;
     project.priority = req.body.priority;
