@@ -6,6 +6,8 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
+//------------------------------------------------------------
+//User
 export const getAllUsers = async () => {
   return axios
     .get(`${apiPath}/user`, { headers: headers })
@@ -32,3 +34,32 @@ export const deleteUserById = async user => {
     .then(resp => resp.data)
     .catch(err => Promise.reject(err));
 };
+//-------------------------------------------------------------------------
+//Project
+export const getAllProject = async () => {
+  return axios
+    .get(`${apiPath}/project`, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+export const addNewProject = async project => {
+  return axios
+    .post(`${apiPath}/project/add`, project, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+export const updateProjectById = async project => {
+  return axios
+    .post(`${apiPath}/project/update/${project.projectId}`, project, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+export const deleteProjectById = async project => {
+  return axios
+    .get(`${apiPath}/project/delete/${project._id}`, project, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+//-----------------------------------------------------------------------------

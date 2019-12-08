@@ -15,14 +15,15 @@ import ViewTask from './components/ViewTask/ViewTask';
 function App() {
   return (
     <Container fluid>
+      <h1>Project Manager</h1>
       <Router>
         <HeaderNav />
         <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/adduser' component={AddUser} />
-          <Route exact path='/addproject' component={AddProject} />
-          <Route exact path='/addtask' component={AddTask} />
-          <Route exact path='/viewtask' component={ViewTask} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/adduser" component={AddUser} />
+          <Route exact path="/addproject" component={AddProject} />
+          <Route exact path="/addtask" component={AddTask} />
+          <Route exact path="/viewtask" component={ViewTask} />
         </Switch>
       </Router>
     </Container>

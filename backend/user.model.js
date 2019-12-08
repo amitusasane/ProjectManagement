@@ -9,7 +9,7 @@ let Users = new Schema({
     type: String
   },
   empId: {
-    type: String
+    type: Number
   }
 });
 module.exports = mongoose.model('Users', Users);
