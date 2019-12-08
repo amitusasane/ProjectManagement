@@ -23,7 +23,7 @@ export const addNewUser = async user => {
 
 export const updateUserById = async user => {
   return axios
-    .post(`${apiPath}/user/update/${user.userId}`, user, { headers: headers })
+    .put(`${apiPath}/user/update/${user.userId}`, user, { headers: headers })
     .then(resp => resp.data)
     .catch(err => Promise.reject(err));
 };
@@ -51,7 +51,7 @@ export const addNewProject = async project => {
 
 export const updateProjectById = async project => {
   return axios
-    .post(`${apiPath}/project/update/${project.projectId}`, project, { headers: headers })
+    .put(`${apiPath}/project/update/${project.projectId}`, project, { headers: headers })
     .then(resp => resp.data)
     .catch(err => Promise.reject(err));
 };

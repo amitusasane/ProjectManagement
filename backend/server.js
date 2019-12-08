@@ -54,7 +54,7 @@ userRoutes.route('/add').post(function(req, res) {
 });
 
 //3. Update user by Id
-userRoutes.route('/update/:id').post(function(req, res) {
+userRoutes.route('/update/:id').put(function(req, res) {
   User.findById(req.params.id, function(err, user) {
     if (!user) res.status(404).send('User data is not found');
     else user.firstName = req.body.firstName;
@@ -116,7 +116,7 @@ projectRoutes.route('/add').post(function(req, res) {
 });
 
 //3. Update project by Id
-projectRoutes.route('/update/:id').post(function(req, res) {
+projectRoutes.route('/update/:id').put(function(req, res) {
   Project.findById(req.params.id, function(err, project) {
     if (!project) res.status(404).send('Project data is not found');
     else project.projectName = req.body.projectName;

@@ -18,12 +18,11 @@ const AddProject = () => {
   let [projectId, setProjectId] = useState('');
   let [projectName, setProjectName] = useState('');
 
-  let [startDate, setStartDate] = useState('');
-  let [endDate, setEndDate] = useState('');
+  let [startDate, setStartDate] = useState(initialStartDate);
+  let [endDate, setEndDate] = useState(initialEndDate);
   let [dateRequired, setDateRequired] = useState(false);
-  //let [enableDate, setEnableDate] = useState(false);
 
-  let [priority, setPriority] = useState();
+  let [priority, setPriority] = useState('');
   let [statusMessage, setStatusMessage] = useState({ show: false, message: '', variant: '' });
 
   async function fetchAllProjects() {
@@ -62,8 +61,8 @@ const AddProject = () => {
     setProjectId(project._id);
     setProjectName(project.projectName);
     setDateRequired(project.dateRequired);
-    setStartDate(project.startDate ? formatDate(project.startDate) : '');
-    setEndDate(project.endDate ? formatDate(project.endDate) : '');
+    setStartDate(project.startDate ? formatDate(project.startDate) : initialStartDate);
+    setEndDate(project.endDate ? formatDate(project.endDate) : initialEndDate);
     setPriority(project.priority);
   }
 
@@ -79,24 +78,20 @@ const AddProject = () => {
 
   function resetFormState() {
     setProjectName('');
-    setStartDate('');
-    setEndDate('');
+    setStartDate(initialStartDate);
+    setEndDate(initialEndDate);
     setPriority('');
     setDateRequired(false);
     setEditMode(false);
   }
 
-  function onCheckboxChange(event) {
-    if (event.target.checked) {
-      setDateRequired(true);
-      setStartDate(initialStartDate);
-      setEndDate(initialEndDate);
-    } else {
-      setDateRequired(false);
-      setStartDate('');
-      setEndDate('');
-    }
-  }
+  // function onCheckboxChange(event) {
+  //   if (event.target.checked) {
+  //     setDateRequired(true);
+  //   } else {
+  //     setDateRequired(false);
+  //   }
+  // }
 
   function getAfterDate(num) {
     return moment().add(num, 'day');
@@ -209,25 +204,28 @@ const AddProject = () => {
             <Form.Check
               type="checkbox"
               name="dateRequired"
-              checked={dateRequired}
+              value={formik.values.dateRequired}
+              checked={formik.values.dateRequired}
               label="Set Start and End date"
-              onClick={onCheckboxChange}
-              errors={formik.errors.dateRequired}
-              className={
-                formik.touched.dateRequired
-                  ? formik.errors.dateRequired
-                    ? 'is-invalid mb-2 mt-2'
-                    : 'is-valid mb-2 mt-2'
-                  : 'mb-2 mt-2'
-              }
+              //onChange={formik.onChange}
+              //onBlur={formik.onBlur}
+              // errors={formik.errors.dateRequired}
+              // className={
+              //   formik.touched.dateRequired
+              //     ? formik.errors.dateRequired
+              //       ? 'is-invalid mb-2 mt-2'
+              //       : 'is-valid mb-2 mt-2'
+              //     : 'mb-2 mt-2'
+              // }
               {...formik.getFieldProps('dateRequired')}
+              // {...formik.getFieldMeta('dateRequired')}
             />
-            <FormControl.Feedback type="invalid">{formik.errors.dateRequired}</FormControl.Feedback>
+            {/* <FormControl.Feedback type="invalid">{formik.errors.dateRequired}</FormControl.Feedback> */}
             <FormControl
               placeholder="Start Date"
               name="startDate"
               type="date"
-              disabled={!dateRequired}
+              disabled={!formik.values.dateRequired}
               required={false}
               errors={formik.errors.startDate}
               className={
@@ -244,7 +242,7 @@ const AddProject = () => {
               placeholder="End Date"
               name="endDate"
               type="date"
-              disabled={!dateRequired}
+              disabled={!formik.values.dateRequired}
               required={false}
               errors={formik.errors.endDate}
               className={
