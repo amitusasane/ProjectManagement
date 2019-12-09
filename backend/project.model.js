@@ -16,6 +16,9 @@ let Project = new Schema({
   },
   priority: {
     type: Number
+  },
+  manager: {
+    type: String
   }
 });
 module.exports = mongoose.model('Project', Project);

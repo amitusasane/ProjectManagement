@@ -124,6 +124,7 @@ projectRoutes.route('/update/:id').put(function(req, res) {
     project.startDate = req.body.startDate;
     project.endDate = req.body.endDate;
     project.priority = req.body.priority;
+    project.manager = req.body.manager;
 
     project
       .save()

@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, FormControl, Button, ListGroup, Alert, Form } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  FormControl,
+  Button,
+  ListGroup,
+  Alert,
+  Form,
+  Modal
+} from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './AddProject.scss';
+
+import SearchModal from '../common/SearchModal';
 
 import { getAllProject, addNewProject, updateProjectById, deleteProjectById } from '../../api/Api';
 import * as moment from 'moment';
@@ -64,6 +76,7 @@ const AddProject = () => {
     setStartDate(project.startDate ? formatDate(project.startDate) : initialStartDate);
     setEndDate(project.endDate ? formatDate(project.endDate) : initialEndDate);
     setPriority(project.priority);
+    setManager(project.manager);
   }
 
   //Call this function after setStatusMessag to autoHide alert message
@@ -81,17 +94,10 @@ const AddProject = () => {
     setStartDate(initialStartDate);
     setEndDate(initialEndDate);
     setPriority('');
+    setManager('');
     setDateRequired(false);
     setEditMode(false);
   }
-
-  // function onCheckboxChange(event) {
-  //   if (event.target.checked) {
-  //     setDateRequired(true);
-  //   } else {
-  //     setDateRequired(false);
-  //   }
-  // }
 
   function getAfterDate(num) {
     return moment().add(num, 'day');
@@ -99,6 +105,16 @@ const AddProject = () => {
 
   function formatDate(date) {
     return moment(date).format('YYYY-MM-DD');
+  }
+
+  let [showManagerModal, setShowManagerModal] = useState(false);
+  let [manager, setManager] = useState('');
+
+  function onCloseManagerModal(val) {
+    setShowManagerModal(false);
+  }
+  function onSearchManager(data, setFieldValue) {
+    setFieldValue('manager', data.name);
   }
 
   useEffect(() => {
@@ -113,7 +129,8 @@ const AddProject = () => {
       startDate: startDate,
       endDate: endDate,
       priority: priority,
-      dateRequired: dateRequired
+      dateRequired: dateRequired,
+      manager: manager
     },
     validationSchema: Yup.object({
       projectName: Yup.string().required('Please enter Project Name'),
@@ -132,7 +149,8 @@ const AddProject = () => {
         otherwise: Yup.date()
       }),
       priority: Yup.number().required('Please enter Priority'),
-      dateRequired: Yup.boolean()
+      dateRequired: Yup.boolean(),
+      manager: Yup.string().required('Please select Manager from serach')
     }),
     onSubmit: async value => {
       if (!value.dateRequired) {
@@ -207,20 +225,8 @@ const AddProject = () => {
               value={formik.values.dateRequired}
               checked={formik.values.dateRequired}
               label="Set Start and End date"
-              //onChange={formik.onChange}
-              //onBlur={formik.onBlur}
-              // errors={formik.errors.dateRequired}
-              // className={
-              //   formik.touched.dateRequired
-              //     ? formik.errors.dateRequired
-              //       ? 'is-invalid mb-2 mt-2'
-              //       : 'is-valid mb-2 mt-2'
-              //     : 'mb-2 mt-2'
-              // }
               {...formik.getFieldProps('dateRequired')}
-              // {...formik.getFieldMeta('dateRequired')}
             />
-            {/* <FormControl.Feedback type="invalid">{formik.errors.dateRequired}</FormControl.Feedback> */}
             <FormControl
               placeholder="Start Date"
               name="startDate"
@@ -270,7 +276,30 @@ const AddProject = () => {
               {...formik.getFieldProps('priority')}
             ></FormControl>
             <FormControl.Feedback type="invalid">{formik.errors.priority}</FormControl.Feedback>
+            <FormControl
+              plaintext
+              required
+              readOnly
+              name="manager"
+              errors={formik.errors.manager}
+              className={
+                formik.touched.manager
+                  ? formik.errors.manager
+                    ? 'is-invalid mb-2 mt-2'
+                    : 'is-valid mb-2 mt-2'
+                  : 'mb-2 mt-2'
+              }
+              {...formik.getFieldProps('manager')}
+            ></FormControl>
+            <Button
+              onClick={() => {
+                setShowManagerModal(true);
+              }}
+            >
+              Search manager
+            </Button>
 
+            <FormControl.Feedback type="invalid">{formik.errors.manager}</FormControl.Feedback>
             <div className="float-right">
               <Button
                 variant="primary"
@@ -290,6 +319,19 @@ const AddProject = () => {
                 Reset
               </Button>
             </div>
+            <SearchModal
+              id="searchManager"
+              heading="Serach Manager"
+              showModal={showManagerModal}
+              onCloseModal={onCloseManagerModal}
+              data={[
+                { name: 'SHREE', id: '1' },
+                { name: 'OM', id: '2' }
+              ]}
+              onSearch={data => {
+                onSearchManager(data, formik.setFieldValue);
+              }}
+            />
           </form>
         </Col>
       </Row>
@@ -308,6 +350,7 @@ const AddProject = () => {
                     <p>Start Date : {project.startDate && formatDate(project.startDate)}</p>
                     <p>End Date : {project.endDate && formatDate(project.endDate)}</p>
                     <p>Priority : {project.priority}</p>
+                    <p>Manager : {project.manager}</p>
                   </div>
                   <div>
                     <Button variant="outline-primary" onClick={() => editProject(project)}>
