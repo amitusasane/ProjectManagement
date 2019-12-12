@@ -3,7 +3,6 @@ import { Modal } from 'react-bootstrap';
 import Table from './Table';
 
 const SearchModal = props => {
-  const columns = [{ dataField: 'name', text: 'Project Name' }];
   const onSelectItem = selectedItem => {
     props.onSearch(selectedItem);
     props.onCloseModal();
@@ -15,14 +14,12 @@ const SearchModal = props => {
         <Modal.Title>{props.heading}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div
-          onClick={() => {
-            onSelectItem(props.data[0]);
-          }}
-        >
-          <Table columns={columns} data={props.data} keyField="id" />
-          {props.data[0].name}
-        </div>
+        <Table
+          columns={props.columns}
+          data={props.data}
+          keyField="id"
+          rowClickHandler={onSelectItem}
+        />
       </Modal.Body>
     </Modal>
   );

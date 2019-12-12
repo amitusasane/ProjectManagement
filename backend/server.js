@@ -21,22 +21,18 @@ const connection = mongoose.connection;
 connection.once('open', function() {
   console.log('MongoDB Atlas database connection established successfully');
 });
-
-// todoRoutes.route('/:id').get(function(req, res) {
-//   let id = req.params.id;
-//   Todo.findById(id, function(err, todo) {
-//     res.json(todo);
-//   });
-// });
-
 //-----------------------------------------------------------------------------
 // User routes
 const userRoutes = require('./routes/user');
 app.use('/user', userRoutes);
-//--------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Project routes
 const projectRoutes = require('./routes/project');
 app.use('/project', projectRoutes);
+//--------------------------------------------------------------------------
+//Task routes
+const taskRoutes = require('./routes/task');
+app.use('/task', taskRoutes);
 //--------------------------------------------------------------------------
 app.listen(PORT, function() {
   console.log('Server is running on Port: ' + PORT);

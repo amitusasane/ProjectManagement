@@ -3,13 +3,19 @@ const Schema = mongoose.Schema;
 
 let Users = new Schema({
   firstName: {
-    type: String
+    type: String,
+    required: true,
+    max: 100
   },
   lastName: {
-    type: String
+    type: String,
+    required: true,
+    max: 100
   },
   empId: {
-    type: Number
+    type: Number,
+    required: true,
+    max: 100
   },
   projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
   //tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]

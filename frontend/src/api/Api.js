@@ -49,6 +49,12 @@ export const addNewProject = async project => {
     .catch(err => Promise.reject(err));
 };
 
+export const getProjectById = async projectId => {
+  return axios
+    .get(`${apiPath}/project/${projectId}`, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
 export const updateProjectById = async project => {
   return axios
     .put(`${apiPath}/project/update/${project.projectId}`, project, { headers: headers })
@@ -63,3 +69,40 @@ export const deleteProjectById = async project => {
     .catch(err => Promise.reject(err));
 };
 //-----------------------------------------------------------------------------
+// Tasks
+
+// Add task
+
+export const addNewTask = async task => {
+  return axios
+    .post(`${apiPath}/task/add`, task, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+// get task by project Id
+
+export const getAllTasksByProjectId = async project => {
+  return axios
+    .get(`${apiPath}/task/project/${project._id}`, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+// get all tasks
+
+export const getAllTasks = async () => {
+  return axios
+    .get(`${apiPath}/task`, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+// complete task
+export const updateTaskAsComplete = async task => {
+  return axios
+    .put(`${apiPath}/task/complete/${task._id}`, task, {
+      headers: headers
+    })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};

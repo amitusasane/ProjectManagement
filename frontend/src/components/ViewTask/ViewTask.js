@@ -1,7 +1,148 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Row,
+  Col,
+  FormLabel,
+  InputGroup,
+  FormControl,
+  Button,
+  ListGroup,
+  ListGroupItem,
+  Alert
+} from 'react-bootstrap';
+import * as moment from 'moment';
+import SearchModal from '../common/SearchModal';
+import { getAllTasksByProjectId, updateTaskAsComplete, getAllProject } from '../../api/Api';
 
 const ViewTask = () => {
-  return <p>Add Task...</p>;
+  let [tasks, setTasks] = useState([]);
+  let [statusMessage, setStatusMessage] = useState({
+    show: false,
+    message: '',
+    variant: ''
+  });
+
+  //////////////////////////////////////////
+  //Serach Project
+
+  let [project, setProject] = useState('');
+  let [projectList, setProjectList] = useState([]);
+  let [showProjectModal, setShowProjectModal] = useState(false);
+
+  const searchProject = async () => {
+    setProjectList(await getAllProject());
+    setShowProjectModal(true);
+  };
+  function onCloseProjectModal(val) {
+    setShowProjectModal(false);
+  }
+  function onSearchProject(project) {
+    setProject(project);
+  }
+
+  async function fetchTasksByProjectId() {
+    if (project) {
+      try {
+        setTasks(await getAllTasksByProjectId(project));
+      } catch (err) {
+        setStatusMessage({
+          ...statusMessage,
+          show: true,
+          message: err,
+          variant: 'danger'
+        });
+      }
+    }
+  }
+
+  function formatDate(date) {
+    return moment(date).format('YYYY-MM-DD');
+  }
+
+  useEffect(() => {
+    fetchTasksByProjectId();
+  }, [project]);
+  return (
+    <>
+      <Container>
+        <Row>
+          <Col className="mt-3">
+            <InputGroup>
+              <FormControl
+                required
+                readOnly
+                name="project"
+                value={project.projectName}
+              ></FormControl>
+              <InputGroup.Append>
+                <Button variant="outline-primary" onClick={searchProject}>
+                  Search project
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Col>
+          <SearchModal
+            id="searchProject"
+            heading="Serach Project"
+            showModal={showProjectModal}
+            onCloseModal={onCloseProjectModal}
+            data={projectList}
+            columns={[
+              { dataField: '_id', hidden: true },
+              { dataField: 'projectName', text: 'Project List' }
+            ]}
+            onSearch={onSearchProject}
+          />
+        </Row>
+        {tasks.length > 0 ? (
+          <Row>
+            <Col>
+              <table className="table table-bordered mt-5">
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Parent</th>
+                    <th>Priority</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tasks.map(task => {
+                    return (
+                      <tr>
+                        <td>{task.taskName}</td>
+                        <td></td>
+                        <td>{task.priority}</td>
+                        <td>{formatDate(task.startDate)}</td>
+                        <td>{formatDate(task.endDate)}</td>
+                        <td>
+                          <Button variant="outline-primary">Edit</Button>
+                          <Button
+                            variant="outline-primary"
+                            className="ml-2"
+                            onClick={updateTaskAsComplete}
+                          >
+                            End Task
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </Col>
+          </Row>
+        ) : (
+          <Alert variant="warning">
+            No task available for selected project, please select another project from the list
+          </Alert>
+        )}
+      </Container>
+    </>
+  );
 };
 
 export default ViewTask;
