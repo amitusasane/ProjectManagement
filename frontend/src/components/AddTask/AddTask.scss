@@ -1,8 +1,8 @@
-.project-list {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.btn-outline-primary.disabled,
+.btn-outline-primary:disabled {
+  cursor: not-allowed;
 }
+
 .modal-label {
   border: 1px solid #ced4da;
   flex: 1 1 auto;

@@ -70,7 +70,6 @@ export const deleteProjectById = async project => {
 };
 //-----------------------------------------------------------------------------
 // Tasks
-
 // Add task
 
 export const addNewTask = async task => {
@@ -103,6 +102,25 @@ export const updateTaskAsComplete = async task => {
     .put(`${apiPath}/task/complete/${task._id}`, task, {
       headers: headers
     })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+//------------------------------------------------------------
+// Add Parent Task
+
+export const addParentTask = async task => {
+  return axios
+    .post(`${apiPath}/parentTask/add`, task, { headers: headers })
+    .then(resp => resp.data)
+    .catch(err => Promise.reject(err));
+};
+
+// get all parent tasks
+
+export const getAllParentTasks = async () => {
+  return axios
+    .get(`${apiPath}/parentTask`, { headers: headers })
     .then(resp => resp.data)
     .catch(err => Promise.reject(err));
 };

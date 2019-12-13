@@ -4,10 +4,12 @@ import {
   Row,
   Col,
   FormControl,
+  InputGroup,
   Button,
   ListGroup,
   Alert,
   Form,
+  FormLabel,
   Modal
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
@@ -16,7 +18,14 @@ import './AddProject.scss';
 
 import SearchModal from '../common/SearchModal';
 
-import { getAllProject, addNewProject, updateProjectById, deleteProjectById } from '../../api/Api';
+import {
+  getAllProject,
+  addNewProject,
+  getProjectById,
+  updateProjectById,
+  deleteProjectById,
+  getAllUsers
+} from '../../api/Api';
 import * as moment from 'moment';
 
 const AddProject = () => {
@@ -27,7 +36,7 @@ const AddProject = () => {
   let [projects, setProjects] = useState([]);
 
   let [editMode, setEditMode] = useState(false);
-  let [projectId, setProjectId] = useState('');
+  //let [projectId, setProjectId] = useState('');
   let [projectName, setProjectName] = useState('');
 
   let [startDate, setStartDate] = useState(initialStartDate);
@@ -37,16 +46,16 @@ const AddProject = () => {
   let [priority, setPriority] = useState('');
   let [statusMessage, setStatusMessage] = useState({ show: false, message: '', variant: '' });
 
-  async function fetchAllProjects() {
+  const fetchAllProjects = async () => {
     try {
       setProjects(await getAllProject());
       setProjectUpdated(false);
     } catch (err) {
       setStatusMessage({ ...statusMessage, show: true, message: err, variant: 'danger' });
     }
-  }
+  };
 
-  async function deleteProject(project) {
+  const deleteProject = async project => {
     try {
       const resp = await deleteProjectById(project);
       setProjectUpdated(true);
@@ -66,30 +75,39 @@ const AddProject = () => {
     }
     resetFormState();
     formik.resetForm();
-  }
+  };
 
-  function editProject(project) {
-    setEditMode(true);
-    setProjectId(project._id);
-    setProjectName(project.projectName);
-    setDateRequired(project.dateRequired);
-    setStartDate(project.startDate ? formatDate(project.startDate) : initialStartDate);
-    setEndDate(project.endDate ? formatDate(project.endDate) : initialEndDate);
-    setPriority(project.priority);
-    setManager(project.manager);
-  }
+  const getNumOfCompletedTask = task => {
+    const length = task.filter(item => item.status === 'Completed').length;
+    return length;
+  };
+
+  const editProject = async project => {
+    try {
+      const resp = await getProjectById(project._id);
+      setEditMode(true);
+      //setProjectId(resp._id);
+      setProjectName(resp.projectName);
+      setDateRequired(resp.dateRequired);
+      setStartDate(resp.startDate ? formatDate(resp.startDate) : initialStartDate);
+      setEndDate(resp.endDate ? formatDate(resp.endDate) : initialEndDate);
+      setPriority(resp.priority);
+      setManager(resp.manager);
+    } catch (err) {}
+  };
 
   //Call this function after setStatusMessag to autoHide alert message
-  function autoHideAlert() {
+
+  const autoHideAlert = () => {
     setTimeout(() => {
       setStatusMessage({
         ...statusMessage,
         show: false
       });
     }, 5000);
-  }
+  };
 
-  function resetFormState() {
+  const resetFormState = () => {
     setProjectName('');
     setStartDate(initialStartDate);
     setEndDate(initialEndDate);
@@ -97,7 +115,7 @@ const AddProject = () => {
     setManager('');
     setDateRequired(false);
     setEditMode(false);
-  }
+  };
 
   function getAfterDate(num) {
     return moment().add(num, 'day');
@@ -108,14 +126,19 @@ const AddProject = () => {
   }
 
   let [showManagerModal, setShowManagerModal] = useState(false);
+  let [managerList, setManagerList] = useState([]);
   let [manager, setManager] = useState('');
 
-  function onCloseManagerModal(val) {
+  const onCloseManagerModal = val => {
     setShowManagerModal(false);
-  }
-  function onSearchManager(data, setFieldValue) {
-    setFieldValue('manager', data.name);
-  }
+  };
+  const searchManager = async () => {
+    setManagerList(await getAllUsers());
+    setShowManagerModal(true);
+  };
+  const onSearchManager = (data, setFieldValue) => {
+    setFieldValue('manager', data);
+  };
 
   useEffect(() => {
     fetchAllProjects();
@@ -124,7 +147,7 @@ const AddProject = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      projectId: projectId,
+      //projectId: projectId,
       projectName: projectName,
       startDate: startDate,
       endDate: endDate,
@@ -150,7 +173,7 @@ const AddProject = () => {
       }),
       priority: Yup.number().required('Please enter Priority'),
       dateRequired: Yup.boolean(),
-      manager: Yup.string().required('Please select Manager from serach')
+      manager: Yup.object().required('Please select Manager from serach')
     }),
     onSubmit: async value => {
       if (!value.dateRequired) {
@@ -261,7 +284,7 @@ const AddProject = () => {
               {...formik.getFieldProps('endDate')}
             ></FormControl>
             <FormControl.Feedback type="invalid">{formik.errors.endDate}</FormControl.Feedback>
-            <FormControl
+            {/* <FormControl
               placeholder="priority"
               name="priority"
               required
@@ -274,33 +297,56 @@ const AddProject = () => {
                   : 'mb-2 mt-2'
               }
               {...formik.getFieldProps('priority')}
-            ></FormControl>
-            <FormControl.Feedback type="invalid">{formik.errors.priority}</FormControl.Feedback>
+            ></FormControl> */}
+
             <FormControl
-              plaintext
-              required
-              readOnly
-              name="manager"
-              errors={formik.errors.manager}
+              placeholder="priority"
+              name="priority"
+              type="range"
+              min="0"
+              max="30"
+              step="1"
+              errors={formik.errors.priority}
               className={
-                formik.touched.manager
-                  ? formik.errors.manager
+                formik.touched.priority
+                  ? formik.errors.priority
                     ? 'is-invalid mb-2 mt-2'
                     : 'is-valid mb-2 mt-2'
                   : 'mb-2 mt-2'
               }
-              {...formik.getFieldProps('manager')}
+              {...formik.getFieldProps('priority')}
             ></FormControl>
-            <Button
-              onClick={() => {
-                setShowManagerModal(true);
-              }}
-            >
-              Search manager
-            </Button>
 
+            <FormControl.Feedback type="invalid">{formik.errors.priority}</FormControl.Feedback>
+            <InputGroup>
+              {formik.values.manager.firstName ? (
+                <FormLabel className="modal-label">{`${formik.values.manager.firstName} ${formik.values.manager.lastName}`}</FormLabel>
+              ) : (
+                <FormLabel className="modal-label"></FormLabel>
+              )}
+              <FormControl
+                plaintext
+                required
+                readOnly
+                hidden
+                name="manager"
+                errors={formik.errors.manager}
+                className={
+                  formik.touched.manager
+                    ? formik.errors.manager
+                      ? 'is-invalid mb-2 mt-2'
+                      : 'is-valid mb-2 mt-2'
+                    : 'mb-2 mt-2'
+                }
+                {...formik.getFieldProps('manager')}
+              ></FormControl>
+              <InputGroup.Append>
+                <Button onClick={searchManager}>Search Manager</Button>
+              </InputGroup.Append>
+            </InputGroup>
             <FormControl.Feedback type="invalid">{formik.errors.manager}</FormControl.Feedback>
-            <div className="float-right">
+
+            <div className="float-right mt-4">
               <Button
                 variant="primary"
                 disabled={!formik.isValid || !formik.dirty}
@@ -324,9 +370,11 @@ const AddProject = () => {
               heading="Serach Manager"
               showModal={showManagerModal}
               onCloseModal={onCloseManagerModal}
-              data={[
-                { name: 'SHREE', id: '1' },
-                { name: 'OM', id: '2' }
+              data={managerList}
+              columns={[
+                { dataField: '_id', hidden: true },
+                { dataField: 'firstName', text: 'User List' },
+                { dataField: 'lastName', hidden: true }
               ]}
               onSearch={data => {
                 onSearchManager(data, formik.setFieldValue);
@@ -347,11 +395,26 @@ const AddProject = () => {
                 <ListGroup.Item className="project-list" key={project._id}>
                   <div>
                     <p>Project : {project.projectName}</p>
-                    <p>Start Date : {project.startDate && formatDate(project.startDate)}</p>
-                    <p>End Date : {project.endDate && formatDate(project.endDate)}</p>
-                    <p>Priority : {project.priority}</p>
-                    <p>Manager : {project.manager}</p>
+                    <div>
+                      <span className="mr-2">
+                        Start Date : {project.startDate && formatDate(project.startDate)}
+                      </span>
+                      <span className="ml-5">
+                        End Date : {project.endDate && formatDate(project.endDate)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="mr-2">No of tasks: {project.task.length}</span>
+                    </div>
+                    <div>
+                      <span className="mr-2">Completed: {getNumOfCompletedTask(project.task)}</span>
+                    </div>
                   </div>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      <p>Priority : </p> <p>{project.priority}</p>
+                    </ListGroup.Item>
+                  </ListGroup>
                   <div>
                     <Button variant="outline-primary" onClick={() => editProject(project)}>
                       Update

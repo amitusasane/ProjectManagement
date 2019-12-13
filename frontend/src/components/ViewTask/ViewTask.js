@@ -12,6 +12,7 @@ import {
   Alert
 } from 'react-bootstrap';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import SearchModal from '../common/SearchModal';
 import { getAllTasksByProjectId, updateTaskAsComplete, getAllProject } from '../../api/Api';
 
@@ -29,7 +30,11 @@ const ViewTask = () => {
   let [project, setProject] = useState('');
   let [projectList, setProjectList] = useState([]);
   let [showProjectModal, setShowProjectModal] = useState(false);
-
+  let [sortMode, setSortMode] = useState(false);
+  let [startDateSort, setStartDateSort] = useState(false);
+  let [endDateSort, setEndDateSort] = useState(false);
+  let [prioritySort, setPrioritySort] = useState(false);
+  let [taskCompleted, setTaskCompleted] = useState(false);
   const searchProject = async () => {
     setProjectList(await getAllProject());
     setShowProjectModal(true);
@@ -53,19 +58,31 @@ const ViewTask = () => {
           variant: 'danger'
         });
       }
+      setSortMode(false);
     }
   }
 
   function formatDate(date) {
     return moment(date).format('YYYY-MM-DD');
   }
+  // sorting
 
+  const handleSort = field => {
+    setSortMode(true);
+    const sortByField = _.sortBy(tasks, field);
+    setTasks(sortByField);
+  };
   useEffect(() => {
     fetchTasksByProjectId();
   }, [project]);
   return (
     <>
       <Container>
+        {taskCompleted && (
+          <Alert variant="info" className="mt-3" dismissible>
+            Task mark as Completed.
+          </Alert>
+        )}
         <Row>
           <Col className="mt-3">
             <InputGroup>
@@ -95,6 +112,47 @@ const ViewTask = () => {
             onSearch={onSearchProject}
           />
         </Row>
+        <Row className="mt-3 mb-3">
+          <Col xs={12} sm={6}>
+            Sort Task By:
+            <Button
+              variant="outline-primary"
+              className={sortMode && startDateSort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('startDate');
+                setStartDateSort(true);
+                setEndDateSort(false);
+                setPrioritySort(false);
+              }}
+            >
+              Start Date
+            </Button>
+            <Button
+              variant="outline-primary"
+              className={sortMode && endDateSort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('endDate');
+                setStartDateSort(false);
+                setEndDateSort(true);
+                setPrioritySort(false);
+              }}
+            >
+              End Date
+            </Button>
+            <Button
+              variant="outline-primary"
+              className={sortMode && prioritySort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('priority');
+                setStartDateSort(false);
+                setEndDateSort(false);
+                setPrioritySort(true);
+              }}
+            >
+              Priority
+            </Button>
+          </Col>
+        </Row>
         {tasks.length > 0 ? (
           <Row>
             <Col>
@@ -114,7 +172,7 @@ const ViewTask = () => {
                     return (
                       <tr>
                         <td>{task.taskName}</td>
-                        <td></td>
+                        <td>{task.parentTask && task.parentTask.taskName}</td>
                         <td>{task.priority}</td>
                         <td>{formatDate(task.startDate)}</td>
                         <td>{formatDate(task.endDate)}</td>
@@ -123,7 +181,11 @@ const ViewTask = () => {
                           <Button
                             variant="outline-primary"
                             className="ml-2"
-                            onClick={updateTaskAsComplete}
+                            disabled={taskCompleted || task.status === 'Completed'}
+                            onClick={async () => {
+                              await updateTaskAsComplete(task);
+                              setTaskCompleted(true);
+                            }}
                           >
                             End Task
                           </Button>

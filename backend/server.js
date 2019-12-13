@@ -4,11 +4,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config(); // Needs to configure .env variables
 
-//const userRoutes = express.Router();
-//let User = require('./user.model');
-//const projectRoutes = express.Router();
-//let Project = require('./project.model');
-
 const PORT = 4000;
 const uri = process.env.ATLAS_URI;
 //mongodb://127.0.0.1:27017/project-management
@@ -33,6 +28,10 @@ app.use('/project', projectRoutes);
 //Task routes
 const taskRoutes = require('./routes/task');
 app.use('/task', taskRoutes);
+//--------------------------------------------------------------------------
+//Parent Task routes
+const parentTaskRoutes = require('./routes/parentTask');
+app.use('/parentTask', parentTaskRoutes);
 //--------------------------------------------------------------------------
 app.listen(PORT, function() {
   console.log('Server is running on Port: ' + PORT);

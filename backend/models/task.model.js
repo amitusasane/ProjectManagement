@@ -21,7 +21,8 @@ let Task = new Schema({
     type: String
   },
   parentTask: {
-    type: String
+    type: Schema.Types.ObjectId,
+    ref: 'ParentTask'
   },
   project: {
     type: Schema.Types.ObjectId,

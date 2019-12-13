@@ -5,13 +5,15 @@ const projectRoutes = express.Router();
 
 //1 . Fetch All project
 projectRoutes.route('/').get(function(req, res) {
-  Project.find(function(err, resp) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(resp);
-    }
-  });
+  Project.find()
+    .populate('task')
+    .exec(function(err, resp) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(resp);
+      }
+    });
 });
 
 //2. Add new project
@@ -63,6 +65,19 @@ projectRoutes.route('/delete/:id').get(function(req, res) {
           res.status(400).send('Project deletion not possible');
         });
   });
+});
+
+//5 Get data for Edit Mode
+projectRoutes.route('/:id').get(function(req, res) {
+  Project.findById(req.params.id)
+    .populate('manager')
+    .exec(function(err, resp) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(resp);
+      }
+    });
 });
 
 module.exports = projectRoutes;

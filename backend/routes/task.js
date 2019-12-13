@@ -30,12 +30,30 @@ taskRoutes.route('/').get(function(req, res) {
 
 //fetch task by project Id
 taskRoutes.route('/project/:id').get(function(req, res) {
-  Task.find({ project: req.params.id }, function(err, resp) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(resp);
-    }
+  Task.find({ project: req.params.id })
+    .populate('parentTask')
+    .exec(function(err, resp) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(resp);
+      }
+    });
+});
+
+taskRoutes.route('/complete/:id').put(function(req, res) {
+  Task.findById(req.params.id, function(err, task) {
+    if (!task) res.status(404).send('Project data is not found');
+    else task.status = 'Completed';
+
+    task
+      .save()
+      .then(task => {
+        res.json({ message: 'Task Completed successfully' });
+      })
+      .catch(err => {
+        res.status(400).send('Task completion is not possible');
+      });
   });
 });
 

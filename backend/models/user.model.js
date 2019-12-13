@@ -16,8 +16,8 @@ let Users = new Schema({
     type: Number,
     required: true,
     max: 100
-  },
-  projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
+  }
+  //projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
   //tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
 });
 module.exports = mongoose.model('Users', Users);
