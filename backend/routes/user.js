@@ -31,18 +31,20 @@ userRoutes.route('/add').post(function(req, res) {
 userRoutes.route('/update/:id').put(function(req, res) {
   User.findById(req.params.id, function(err, user) {
     if (!user) res.status(404).send('User data is not found');
-    else user.firstName = req.body.firstName;
-    user.lastName = req.body.lastName;
-    user.empId = req.body.empId;
+    else {
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+      user.empId = req.body.empId;
 
-    user
-      .save()
-      .then(user => {
-        res.json({ message: 'User updated successfully' });
-      })
-      .catch(err => {
-        res.status(400).send('User Update not possible');
-      });
+      user
+        .save()
+        .then(user => {
+          res.json({ message: 'User updated successfully' });
+        })
+        .catch(err => {
+          res.status(400).send('User Update not possible');
+        });
+    }
   });
 });
 

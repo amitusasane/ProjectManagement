@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, InputGroup, FormControl, Button, Alert } from 'react-bootstrap';
 import moment from 'moment';
 import * as _ from 'lodash';
+import { withRouter, useHistory } from 'react-router-dom';
 import SearchModal from '../common/SearchModal';
-import { getAllTasksByProjectId, updateTaskAsComplete, getAllProject } from '../../api/Api';
+import {
+  getAllTasksByProjectId,
+  getTaskById,
+  updateTaskAsComplete,
+  getAllProject
+} from '../../api/Api';
 
 const ViewTask = () => {
   let [tasks, setTasks] = useState([]);
@@ -15,7 +21,7 @@ const ViewTask = () => {
 
   //////////////////////////////////////////
   //Serach Project
-
+  let history = useHistory();
   let [project, setProject] = useState('');
   let [projectList, setProjectList] = useState([]);
   let [showProjectModal, setShowProjectModal] = useState(false);
@@ -54,6 +60,13 @@ const ViewTask = () => {
   function formatDate(date) {
     return moment(date).format('YYYY-MM-DD');
   }
+
+  // edit project
+
+  const editTask = async task => {
+    const currentTask = await getTaskById(task._id);
+    history.push('addtask', currentTask);
+  };
   // sorting
 
   const handleSort = field => {
@@ -166,12 +179,15 @@ const ViewTask = () => {
                         <td>{formatDate(task.startDate)}</td>
                         <td>{formatDate(task.endDate)}</td>
                         <td>
-                          <Button variant="outline-primary">Edit</Button>
+                          <Button variant="outline-primary" onClick={() => editTask(task)}>
+                            Edit
+                          </Button>
                           <Button
                             variant="outline-primary"
                             className="ml-2"
-                            disabled={taskCompleted || task.status === 'Completed'}
-                            onClick={async () => {
+                            disabled={task.status === 'Completed'}
+                            onClick={async e => {
+                              e.target.disabled = true;
                               await updateTaskAsComplete(task);
                               setTaskCompleted(true);
                             }}
@@ -196,4 +212,4 @@ const ViewTask = () => {
   );
 };
 
-export default ViewTask;
+export default withRouter(ViewTask);

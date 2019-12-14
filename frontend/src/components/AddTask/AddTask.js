@@ -17,13 +17,16 @@ import {
   addNewTask,
   getAllUsers,
   getAllProject,
+  updateParentTaskById,
+  updateTaskById,
   getAllParentTasks,
   addParentTask
 } from '../../api/Api';
 import moment from 'moment';
 import './AddTask.scss';
 
-const AddTask = () => {
+const AddTask = props => {
+  const editTaskObj = props.history.location.state;
   const initialStartDate = formatDate(new Date());
   const initialEndDate = formatDate(getAfterDate(1));
 
@@ -54,7 +57,7 @@ const AddTask = () => {
 
   function resetFormState() {
     setProject('');
-    setParentTask({});
+    setParentTask('');
     setUser('');
     setTaskName('');
     setStartDate(initialStartDate);
@@ -110,14 +113,20 @@ const AddTask = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      project: project,
-      parentTask: parentTask,
-      user: user,
-      taskName: taskName,
-      startDate: startDate,
-      endDate: endDate,
-      priority: priority,
-      isParentTask: isParentTask
+      project: editTaskObj && props.history.action === 'PUSH' ? editTaskObj.project : project,
+      parentTask:
+        editTaskObj && props.history.action === 'PUSH' ? editTaskObj.parentTask : parentTask,
+      user: editTaskObj && props.history.action === 'PUSH' ? editTaskObj.user : user,
+      taskName: editTaskObj && props.history.action === 'PUSH' ? editTaskObj.taskName : taskName,
+      startDate:
+        editTaskObj && props.history.action === 'PUSH'
+          ? formatDate(editTaskObj.startDate)
+          : startDate,
+      endDate:
+        editTaskObj && props.history.action === 'PUSH' ? formatDate(editTaskObj.endDate) : endDate,
+      priority: editTaskObj && props.history.action === 'PUSH' ? editTaskObj.priority : priority,
+      isParentTask:
+        editTaskObj && props.history.action === 'PUSH' ? editTaskObj.isParentTask : isParentTask
     },
     validationSchema: Yup.object({
       project: Yup.object().required('Please select Project'),
@@ -154,7 +163,11 @@ const AddTask = () => {
       })
     }),
     onSubmit: async value => {
-      if (Object.keys(value.parentTask).length === 0 && value.parentTask.constructor === Object)
+      if (
+        value.parentTask &&
+        Object.keys(value.parentTask).length === 0 &&
+        value.parentTask.constructor === Object
+      )
         delete value.parentTask;
       if (value.isParentTask) {
         delete value.startDate;
@@ -163,7 +176,13 @@ const AddTask = () => {
         delete value.user;
         delete value.parentTask;
         try {
-          const resp = await addParentTask(value);
+          const resp =
+            editTaskObj && props.history.action === 'PUSH'
+              ? await updateParentTaskById({
+                  ...value,
+                  parentTaskId: editTaskObj.parentTaskObj._id
+                })
+              : await addParentTask(value);
           setStatusMessage({
             ...statusMessage,
             show: true,
@@ -180,7 +199,10 @@ const AddTask = () => {
         }
       }
       try {
-        const resp = await addNewTask(value);
+        const resp =
+          editTaskObj && props.history.action === 'PUSH'
+            ? await updateTaskById({ ...value, _id: editTaskObj._id })
+            : await addNewTask(value);
         setStatusMessage({
           ...statusMessage,
           show: true,
@@ -218,6 +240,8 @@ const AddTask = () => {
               <InputGroup>
                 {formik.values.project.projectName ? (
                   <FormLabel className="modal-label">{`${formik.values.project.projectName}`}</FormLabel>
+                ) : editTaskObj && props.history.action === 'PUSH' ? (
+                  <FormLabel className="modal-label"></FormLabel>
                 ) : (
                   <FormLabel className="modal-label"></FormLabel>
                 )}
@@ -238,7 +262,11 @@ const AddTask = () => {
                 ></FormControl>
 
                 <InputGroup.Append>
-                  <Button variant="outline-primary" onClick={searchProject}>
+                  <Button
+                    variant="outline-primary"
+                    onClick={searchProject}
+                    disabled={editTaskObj && props.history.action === 'PUSH'}
+                  >
                     Search Project
                   </Button>
                 </InputGroup.Append>
@@ -373,7 +401,7 @@ const AddTask = () => {
                   readOnly
                   name="user"
                   disabled={formik.values.isParentTask}
-                  required={false}
+                  required
                   errors={formik.errors.user}
                   className={
                     formik.touched.user
@@ -404,7 +432,7 @@ const AddTask = () => {
                   type="submit"
                   className="ml-2 mr-2"
                 >
-                  Add
+                  {editTaskObj && props.history.action === 'PUSH' ? 'Update' : 'Add'}
                 </Button>
                 <Button
                   variant="outline-secondary"
