@@ -8,5 +8,4 @@ script:
   - cd frontend
   - npm i
   - CI=false npm run build
-  - npm run test:ci
-  - npm run lint -- --fix
+  - CI=false npm run test:ci
