@@ -8,4 +8,4 @@ script:
   - cd frontend
   - npm i
   - CI=false npm run build
-  - CI=true npm run test:ci --silent
+  - CI=true npm run test:ci
