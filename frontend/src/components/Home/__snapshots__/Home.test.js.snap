@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home Component Should render Home component 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="wrap-container"
+    />
+    <div
+      class="row"
+    >
+      <div
+        class="jumbotron"
+      >
+        <h1>
+           Welcome to Project Management Tool!! 
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+`;

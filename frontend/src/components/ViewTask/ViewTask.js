@@ -11,7 +11,7 @@ import {
   ListGroupItem,
   Alert
 } from 'react-bootstrap';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as _ from 'lodash';
 import SearchModal from '../common/SearchModal';
 import { getAllTasksByProjectId, updateTaskAsComplete, getAllProject } from '../../api/Api';

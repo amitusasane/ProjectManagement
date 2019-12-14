@@ -42,5 +42,22 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@testing-library/react": "^9.4.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/node_modules/",
+      "!src/index.js/",
+      "!src/serviceWorker.js"
+    ],
+    "coverageReporters": [
+      "json",
+      "text",
+      "text-summary",
+      "clover",
+      "lcov"
+    ]
+  }
 }

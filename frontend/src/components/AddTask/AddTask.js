@@ -21,7 +21,7 @@ import {
   getAllParentTasks,
   addParentTask
 } from '../../api/Api';
-import * as moment from 'moment';
+import moment from 'moment';
 import './AddTask.scss';
 
 const AddTask = () => {

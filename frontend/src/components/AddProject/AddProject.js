@@ -26,7 +26,7 @@ import {
   deleteProjectById,
   getAllUsers
 } from '../../api/Api';
-import * as moment from 'moment';
+import moment from 'moment';
 
 const AddProject = () => {
   const initialStartDate = formatDate(new Date());
