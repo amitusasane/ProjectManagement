@@ -8,3 +8,4 @@ script:
   - cd frontend
   - npm i react
   - CI=false npm run build
+  - CI=true npm run test:ci -- --forceExit --detectOpenHandles --maxWorkers=10
