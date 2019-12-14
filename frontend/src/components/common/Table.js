@@ -6,7 +6,7 @@ import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.c
 
 const Table = props => {
   const { SearchBar } = Search;
-  const { data, columns, keyField, search, rowClickHandler } = props;
+  const { data, columns, rowClickHandler } = props;
   const rowStyle = rowClickHandler ? { cursor: 'pointer' } : { cursor: 'default' };
 
   const rowClickEvents = {

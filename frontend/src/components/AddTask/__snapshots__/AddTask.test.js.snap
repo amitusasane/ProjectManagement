@@ -116,7 +116,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
             name="startDate"
             placeholder="Start Date"
             type="date"
-            value="2019-12-13"
+            value="2019-12-14"
           />
           <div
             class="invalid-feedback"
@@ -126,7 +126,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
             name="endDate"
             placeholder="End Date"
             type="date"
-            value="2019-12-14"
+            value="2019-12-15"
           />
           <div
             class="invalid-feedback"

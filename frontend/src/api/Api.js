@@ -56,6 +56,7 @@ export const getProjectById = async projectId => {
     .catch(err => Promise.reject(err));
 };
 export const updateProjectById = async project => {
+  debugger;
   return axios
     .put(`${apiPath}/project/update/${project.projectId}`, project, { headers: headers })
     .then(resp => resp.data)

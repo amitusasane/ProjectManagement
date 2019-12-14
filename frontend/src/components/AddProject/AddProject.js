@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Container,
   Row,
   Col,
   FormControl,
@@ -9,8 +8,7 @@ import {
   ListGroup,
   Alert,
   Form,
-  FormLabel,
-  Modal
+  FormLabel
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -36,7 +34,7 @@ const AddProject = () => {
   let [projects, setProjects] = useState([]);
 
   let [editMode, setEditMode] = useState(false);
-  //let [projectId, setProjectId] = useState('');
+  let [projectId, setProjectId] = useState('');
   let [projectName, setProjectName] = useState('');
 
   let [startDate, setStartDate] = useState(initialStartDate);
@@ -86,7 +84,7 @@ const AddProject = () => {
     try {
       const resp = await getProjectById(project._id);
       setEditMode(true);
-      //setProjectId(resp._id);
+      setProjectId(resp._id);
       setProjectName(resp.projectName);
       setDateRequired(resp.dateRequired);
       setStartDate(resp.startDate ? formatDate(resp.startDate) : initialStartDate);
@@ -94,17 +92,6 @@ const AddProject = () => {
       setPriority(resp.priority);
       setManager(resp.manager);
     } catch (err) {}
-  };
-
-  //Call this function after setStatusMessag to autoHide alert message
-
-  const autoHideAlert = () => {
-    setTimeout(() => {
-      setStatusMessage({
-        ...statusMessage,
-        show: false
-      });
-    }, 5000);
   };
 
   const resetFormState = () => {
@@ -147,7 +134,7 @@ const AddProject = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      //projectId: projectId,
+      projectId: projectId,
       projectName: projectName,
       startDate: startDate,
       endDate: endDate,

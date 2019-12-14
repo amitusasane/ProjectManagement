@@ -33,21 +33,23 @@ projectRoutes.route('/add').post(function(req, res) {
 projectRoutes.route('/update/:id').put(function(req, res) {
   Project.findById(req.params.id, function(err, project) {
     if (!project) res.status(404).send('Project data is not found');
-    else project.projectName = req.body.projectName;
-    project.dateRequired = req.body.dateRequired;
-    project.startDate = req.body.startDate;
-    project.endDate = req.body.endDate;
-    project.priority = req.body.priority;
-    project.manager = req.body.manager;
+    else {
+      project.projectName = req.body.projectName;
+      project.dateRequired = req.body.dateRequired;
+      project.startDate = req.body.startDate;
+      project.endDate = req.body.endDate;
+      project.priority = req.body.priority;
+      project.manager = req.body.manager;
 
-    project
-      .save()
-      .then(project => {
-        res.json({ message: 'Project updated successfully' });
-      })
-      .catch(err => {
-        res.status(400).send('Project Update not possible');
-      });
+      project
+        .save()
+        .then(project => {
+          res.json({ message: 'Project updated successfully' });
+        })
+        .catch(err => {
+          res.status(400).send('Project Update not possible');
+        });
+    }
   });
 });
 

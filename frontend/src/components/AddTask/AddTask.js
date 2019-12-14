@@ -7,7 +7,6 @@ import {
   Button,
   Alert,
   Form,
-  Modal,
   FormLabel,
   InputGroup
 } from 'react-bootstrap';
@@ -52,16 +51,6 @@ const AddTask = () => {
   let [parentTask, setParentTask] = useState({});
   let [parentTaskList, setParentTaskList] = useState([]);
   let [showParentModal, setShowParentModal] = useState(false);
-
-  //Call this function after setStatusMessag to autoHide alert message
-  function autoHideAlert() {
-    setTimeout(() => {
-      setStatusMessage({
-        ...statusMessage,
-        show: false
-      });
-    }, 5000);
-  }
 
   function resetFormState() {
     setProject('');
@@ -380,7 +369,6 @@ const AddTask = () => {
                   <FormLabel className="modal-label"></FormLabel>
                 )}
                 <FormControl
-                  required
                   hidden
                   readOnly
                   name="user"
