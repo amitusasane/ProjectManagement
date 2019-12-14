@@ -7,6 +7,4 @@ cache:
 script:
   - cd frontend
   - npm i react
-  - npm audit fix
-  - npm test
   - CI=false npm run build
