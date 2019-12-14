@@ -6,6 +6,6 @@ cache:
     - node_modules
 script:
   - cd frontend
-  - npm i react
+  - npm i
   - CI=false npm run build
-  - CI=true npm run test:ci -- --forceExit --detectOpenHandles --maxWorkers=10
+  - CI=true npm run test:ci --silent
