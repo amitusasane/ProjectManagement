@@ -22,7 +22,6 @@ describe('Add User Component', () => {
   });
   afterEach(cleanup);
   it('Should render Add User component', async () => {
-    //axios.get.mockResolvedValue(userList);
     const { container } = render(
       <Router>
         <AddUser />
@@ -33,7 +32,6 @@ describe('Add User Component', () => {
     });
   });
   it('Get user List ', async () => {
-    //axios.get.mockResolvedValue(userList);
     const { container, getByText } = render(
       <Router>
         <AddUser />
@@ -43,8 +41,6 @@ describe('Add User Component', () => {
   });
 
   it('Should able to Add User ', async () => {
-    //axios.get.mockResolvedValue(userList);
-
     const { container, getByText, getByPlaceholderText } = render(
       <Router>
         <AddUser />
@@ -113,5 +109,36 @@ describe('Add User Component', () => {
     expect(resetBtn).not.toBeDisabled();
     fireEvent.click(resetBtn);
     expect(firstName).toBeEmpty();
+  });
+
+  it('Should able to Serach the user from user List ', async () => {
+    const { container, getByText, getByPlaceholderText } = render(
+      <Router>
+        <AddUser />
+      </Router>
+    );
+    await wait(() => {
+      const searchInp = getByPlaceholderText('Search');
+      fireEvent.change(searchInp, { target: { name: 'searchUser', value: 'User' } });
+    });
+    expect(getByText('FirstName : User01'));
+  });
+  it('Should able to click on sorting options ', async () => {
+    const { container, getByText, getByTestId } = render(
+      <Router>
+        <AddUser />
+      </Router>
+    );
+    await wait(() => {
+      const sortFirstNameBtn = getByTestId('sortFirstName');
+      const sortLastNameBtn = getByTestId('sortLastName');
+      const sortIdBtn = getByTestId('sortId');
+
+      fireEvent.click(sortFirstNameBtn);
+      fireEvent.click(sortLastNameBtn);
+      fireEvent.click(sortIdBtn);
+      expect(sortFirstNameBtn).not.toBeDisabled();
+    });
+    expect(getByText('FirstName : User01'));
   });
 });

@@ -30,6 +30,11 @@ const ViewTask = () => {
   let [endDateSort, setEndDateSort] = useState(false);
   let [prioritySort, setPrioritySort] = useState(false);
   let [taskCompleted, setTaskCompleted] = useState(false);
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
+
   const searchProject = async () => {
     setProjectList(await getAllProject());
     setShowProjectModal(true);
@@ -195,6 +200,7 @@ const ViewTask = () => {
                               e.target.disabled = true;
                               await updateTaskAsComplete(task);
                               setTaskCompleted(true);
+                              scrollToTop();
                             }}
                           >
                             End Task

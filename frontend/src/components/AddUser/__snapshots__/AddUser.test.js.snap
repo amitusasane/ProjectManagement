@@ -97,6 +97,7 @@ exports[`Add User Component Should render Add User component 1`] = `
       >
         <input
           class="mb-4 form-control"
+          name="searchUser"
           placeholder="Search"
         />
       </div>
@@ -106,18 +107,21 @@ exports[`Add User Component Should render Add User component 1`] = `
         Sort By:
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortFirstName"
           type="button"
         >
           First Name
         </button>
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortLastName"
           type="button"
         >
           Last Name
         </button>
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortId"
           type="button"
         >
           ID

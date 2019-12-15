@@ -34,6 +34,9 @@ const AddUser = () => {
     variant: ''
   });
 
+  function scrollToTop() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
   async function fetchAllUsers() {
     try {
       setUsers(await getAllUsers());
@@ -54,6 +57,7 @@ const AddUser = () => {
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setEmpId(user.empId);
+    scrollToTop();
   }
 
   async function deleteUser(user) {
@@ -83,6 +87,7 @@ const AddUser = () => {
     setLastName('');
     setEmpId('');
     setEditMode(false);
+    scrollToTop();
   }
 
   useEffect(() => {
@@ -240,11 +245,17 @@ const AddUser = () => {
         <hr />
         <Row>
           <Col xs={12} sm={6}>
-            <FormControl placeholder="Search" onChange={handleChange} className="mb-4" />
+            <FormControl
+              placeholder="Search"
+              name="searchUser"
+              onChange={handleChange}
+              className="mb-4"
+            />
           </Col>
           <Col xs={12} sm={6}>
             Sort By:
             <Button
+              data-testid="sortFirstName"
               variant="outline-dark"
               className={sortMode && firstNameSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
@@ -257,6 +268,7 @@ const AddUser = () => {
               First Name
             </Button>
             <Button
+              data-testid="sortLastName"
               variant="outline-dark"
               className={sortMode && lastNameSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
@@ -269,6 +281,7 @@ const AddUser = () => {
               Last Name
             </Button>
             <Button
+              data-testid="sortId"
               variant="outline-dark"
               className={sortMode && empIdSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {

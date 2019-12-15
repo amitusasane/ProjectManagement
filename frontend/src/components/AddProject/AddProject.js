@@ -55,6 +55,10 @@ const AddProject = () => {
     variant: ''
   });
 
+  function scrollToTop() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
+
   const fetchAllProjects = async () => {
     try {
       setProjects(await getAllProject());
@@ -109,6 +113,7 @@ const AddProject = () => {
       setPriority(resp.priority);
       setManager(resp.manager);
     } catch (err) {}
+    scrollToTop();
   };
 
   const resetFormState = () => {
@@ -119,6 +124,7 @@ const AddProject = () => {
     setManager('');
     setDateRequired(false);
     setEditMode(false);
+    scrollToTop();
   };
 
   function getAfterDate(num) {

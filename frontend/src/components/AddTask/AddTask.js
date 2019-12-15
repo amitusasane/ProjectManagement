@@ -55,6 +55,10 @@ const AddTask = props => {
   let [parentTaskList, setParentTaskList] = useState([]);
   let [showParentModal, setShowParentModal] = useState(false);
 
+  function scrollToTop() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
+
   function resetFormState() {
     setProject('');
     setParentTask('');
@@ -64,6 +68,7 @@ const AddTask = props => {
     setEndDate(initialEndDate);
     setPriority('');
     setIsParentTask(false);
+    scrollToTop();
   }
 
   function getAfterDate(num) {
