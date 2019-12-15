@@ -1,0 +1,11 @@
+.left-nav {
+  position: sticky;
+  z-index: 1000;
+  height: calc(100vh);
+  background-color: #f7f7f7;
+  border-right: 1px solid #ececec;
+}
+
+.navbar {
+  align-items: flex-start !important;
+}

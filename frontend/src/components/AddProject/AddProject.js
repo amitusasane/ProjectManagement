@@ -8,7 +8,8 @@ import {
   ListGroup,
   Alert,
   Form,
-  FormLabel
+  FormLabel,
+  Container
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -25,6 +26,7 @@ import {
   getAllUsers
 } from '../../api/Api';
 import moment from 'moment';
+import * as _ from 'lodash';
 
 const AddProject = () => {
   const initialStartDate = formatDate(new Date());
@@ -32,24 +34,39 @@ const AddProject = () => {
 
   let [projectUpdated, setProjectUpdated] = useState(false);
   let [projects, setProjects] = useState([]);
-
+  let [projectList, setProjectList] = useState([]);
+  let [sortMode, setSortMode] = useState(false);
   let [editMode, setEditMode] = useState(false);
   let [projectId, setProjectId] = useState('');
   let [projectName, setProjectName] = useState('');
 
   let [startDate, setStartDate] = useState(initialStartDate);
+  let [startDateSort, setStartDateSort] = useState(false);
   let [endDate, setEndDate] = useState(initialEndDate);
+  let [endDateSort, setEndDateSort] = useState(false);
   let [dateRequired, setDateRequired] = useState(false);
 
   let [priority, setPriority] = useState('');
-  let [statusMessage, setStatusMessage] = useState({ show: false, message: '', variant: '' });
+  let [prioritySort, setPrioritySort] = useState(false);
+
+  let [statusMessage, setStatusMessage] = useState({
+    show: false,
+    message: '',
+    variant: ''
+  });
 
   const fetchAllProjects = async () => {
     try {
       setProjects(await getAllProject());
+      setProjectList(await getAllProject());
       setProjectUpdated(false);
     } catch (err) {
-      setStatusMessage({ ...statusMessage, show: true, message: err, variant: 'danger' });
+      setStatusMessage({
+        ...statusMessage,
+        show: true,
+        message: err,
+        variant: 'danger'
+      });
     }
   };
 
@@ -127,6 +144,25 @@ const AddProject = () => {
     setFieldValue('manager', data);
   };
 
+  const handleChange = e => {
+    let newList = [];
+    if (e.target.value !== '') {
+      newList = projectList.filter(item => {
+        const pData = item.projectName.toLowerCase();
+        const filter = e.target.value.toLowerCase();
+        return pData.includes(filter) || item.priority.toString().includes(filter);
+      });
+    } else {
+      newList = projectList;
+    }
+    setProjects(newList);
+  };
+  const handleSort = field => {
+    setSortMode(true);
+    const sortByField = _.sortBy(projects, field);
+    setProjects(sortByField);
+  };
+
   useEffect(() => {
     fetchAllProjects();
   }, [projectUpdated]);
@@ -191,24 +227,27 @@ const AddProject = () => {
 
   return (
     <>
-      <Row>
-        <Col className="mt-3">
-          <Alert
-            variant={statusMessage.variant}
-            show={statusMessage.show}
-            onClose={() => {
-              setStatusMessage({ ...statusMessage, show: false });
-            }}
-            dismissible
-          >
-            {statusMessage.message}
-          </Alert>
-          <form onSubmit={formik.handleSubmit}>
-            <Form.Group as={Row}>
-              <Form.Label column sm="2">
-                Project Name:
-              </Form.Label>
-              <Col sm="10">
+      <Container>
+        <Row className="mt-3">
+          <Col>
+            <h3>Manage Project</h3>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="mt-3">
+            <Alert
+              variant={statusMessage.variant}
+              show={statusMessage.show}
+              onClose={() => {
+                setStatusMessage({ ...statusMessage, show: false });
+              }}
+              dismissible
+            >
+              {statusMessage.message}
+            </Alert>
+            <form onSubmit={formik.handleSubmit}>
+              <Form.Group>
+                <Form.Label>Project Name</Form.Label>
                 <FormControl
                   required
                   placeholder="ProjectName"
@@ -226,203 +265,245 @@ const AddProject = () => {
                 <FormControl.Feedback type="invalid">
                   {formik.errors.projectName}
                 </FormControl.Feedback>
-              </Col>
-            </Form.Group>
+              </Form.Group>
 
-            <Form.Check
-              type="checkbox"
-              name="dateRequired"
-              value={formik.values.dateRequired}
-              checked={formik.values.dateRequired}
-              label="Set Start and End date"
-              {...formik.getFieldProps('dateRequired')}
-            />
-            <FormControl
-              placeholder="Start Date"
-              name="startDate"
-              type="date"
-              disabled={!formik.values.dateRequired}
-              required={false}
-              errors={formik.errors.startDate}
-              className={
-                formik.touched.startDate
-                  ? formik.errors.startDate
-                    ? 'is-invalid mb-2 mt-2'
-                    : 'is-valid mb-2 mt-2'
-                  : 'mb-2 mt-2'
-              }
-              {...formik.getFieldProps('startDate')}
-            ></FormControl>
-            <FormControl.Feedback type="invalid">{formik.errors.startDate}</FormControl.Feedback>
-            <FormControl
-              placeholder="End Date"
-              name="endDate"
-              type="date"
-              disabled={!formik.values.dateRequired}
-              required={false}
-              errors={formik.errors.endDate}
-              className={
-                formik.touched.endDate
-                  ? formik.errors.endDate
-                    ? 'is-invalid mb-2 mt-2'
-                    : 'is-valid mb-2 mt-2'
-                  : 'mb-2 mt-2'
-              }
-              {...formik.getFieldProps('endDate')}
-            ></FormControl>
-            <FormControl.Feedback type="invalid">{formik.errors.endDate}</FormControl.Feedback>
-            {/* <FormControl
-              placeholder="priority"
-              name="priority"
-              required
-              errors={formik.errors.priority}
-              className={
-                formik.touched.priority
-                  ? formik.errors.priority
-                    ? 'is-invalid mb-2 mt-2'
-                    : 'is-valid mb-2 mt-2'
-                  : 'mb-2 mt-2'
-              }
-              {...formik.getFieldProps('priority')}
-            ></FormControl> */}
-
-            <FormControl
-              placeholder="priority"
-              name="priority"
-              type="range"
-              min="0"
-              max="30"
-              step="1"
-              errors={formik.errors.priority}
-              className={
-                formik.touched.priority
-                  ? formik.errors.priority
-                    ? 'is-invalid mb-2 mt-2'
-                    : 'is-valid mb-2 mt-2'
-                  : 'mb-2 mt-2'
-              }
-              {...formik.getFieldProps('priority')}
-            ></FormControl>
-
-            <FormControl.Feedback type="invalid">{formik.errors.priority}</FormControl.Feedback>
-            <InputGroup>
-              {formik.values.manager.firstName ? (
-                <FormLabel className="modal-label">{`${formik.values.manager.firstName} ${formik.values.manager.lastName}`}</FormLabel>
-              ) : (
-                <FormLabel className="modal-label"></FormLabel>
-              )}
+              <Form.Check
+                type="checkbox"
+                name="dateRequired"
+                value={formik.values.dateRequired}
+                checked={formik.values.dateRequired}
+                label="Set Start and End date"
+                {...formik.getFieldProps('dateRequired')}
+              />
+              <Form.Label className="mt-2">Start Date</Form.Label>
               <FormControl
-                plaintext
-                required
-                readOnly
-                hidden
-                name="manager"
-                errors={formik.errors.manager}
+                placeholder="Start Date"
+                name="startDate"
+                type="date"
+                disabled={!formik.values.dateRequired}
+                required={false}
+                errors={formik.errors.startDate}
                 className={
-                  formik.touched.manager
-                    ? formik.errors.manager
+                  formik.touched.startDate
+                    ? formik.errors.startDate
                       ? 'is-invalid mb-2 mt-2'
                       : 'is-valid mb-2 mt-2'
                     : 'mb-2 mt-2'
                 }
-                {...formik.getFieldProps('manager')}
+                {...formik.getFieldProps('startDate')}
               ></FormControl>
-              <InputGroup.Append>
-                <Button onClick={searchManager}>Search Manager</Button>
-              </InputGroup.Append>
-            </InputGroup>
-            <FormControl.Feedback type="invalid">{formik.errors.manager}</FormControl.Feedback>
+              <FormControl.Feedback type="invalid">{formik.errors.startDate}</FormControl.Feedback>
+              <Form.Label>End Date</Form.Label>
+              <FormControl
+                placeholder="End Date"
+                name="endDate"
+                type="date"
+                disabled={!formik.values.dateRequired}
+                required={false}
+                errors={formik.errors.endDate}
+                className={
+                  formik.touched.endDate
+                    ? formik.errors.endDate
+                      ? 'is-invalid mb-2 mt-2'
+                      : 'is-valid mb-2 mt-2'
+                    : 'mb-2 mt-2'
+                }
+                {...formik.getFieldProps('endDate')}
+              ></FormControl>
+              <FormControl.Feedback type="invalid">{formik.errors.endDate}</FormControl.Feedback>
+              <Form.Label className="mt-2">Priority</Form.Label>
+              <FormControl
+                placeholder="priority"
+                name="priority"
+                type="range"
+                min="0"
+                max="30"
+                step="1"
+                errors={formik.errors.priority}
+                className={
+                  formik.touched.priority
+                    ? formik.errors.priority
+                      ? 'is-invalid mb-2 mt-2'
+                      : 'is-valid mb-2 mt-2'
+                    : 'mb-2 mt-2'
+                }
+                {...formik.getFieldProps('priority')}
+              ></FormControl>
 
-            <div className="float-right mt-4">
-              <Button
-                variant="primary"
-                disabled={!formik.isValid || !formik.dirty}
-                type="submit"
-                className="ml-2 mr-2"
-              >
-                {editMode ? 'Update' : 'Add'}
-              </Button>
-              <Button
-                variant="outline-secondary"
-                onClick={() => {
-                  resetFormState();
-                  formik.resetForm();
+              <FormControl.Feedback type="invalid">{formik.errors.priority}</FormControl.Feedback>
+              <Form.Label>Search Manager</Form.Label>
+              <InputGroup>
+                {formik.values.manager.firstName ? (
+                  <FormLabel className="modal-label">{`${formik.values.manager.firstName} ${formik.values.manager.lastName}`}</FormLabel>
+                ) : (
+                  <FormLabel className="modal-label"></FormLabel>
+                )}
+                <FormControl
+                  plaintext
+                  required
+                  readOnly
+                  hidden
+                  name="manager"
+                  errors={formik.errors.manager}
+                  className={
+                    formik.touched.manager
+                      ? formik.errors.manager
+                        ? 'is-invalid mb-2 mt-2'
+                        : 'is-valid mb-2 mt-2'
+                      : 'mb-2 mt-2'
+                  }
+                  {...formik.getFieldProps('manager')}
+                ></FormControl>
+                <InputGroup.Append>
+                  <Button onClick={searchManager} variant="outline-dark">
+                    Search Manager
+                  </Button>
+                </InputGroup.Append>
+              </InputGroup>
+              <FormControl.Feedback type="invalid">{formik.errors.manager}</FormControl.Feedback>
+
+              <div className="float-right mt-4">
+                <Button
+                  variant="dark"
+                  disabled={!formik.isValid || !formik.dirty}
+                  type="submit"
+                  className="ml-2 mr-2"
+                >
+                  {editMode ? 'Update' : 'Add'}
+                </Button>
+                <Button
+                  variant="light"
+                  onClick={() => {
+                    resetFormState();
+                    formik.resetForm();
+                  }}
+                >
+                  Reset
+                </Button>
+              </div>
+              <SearchModal
+                id="searchManager"
+                heading="Serach Manager"
+                showModal={showManagerModal}
+                onCloseModal={onCloseManagerModal}
+                data={managerList}
+                columns={[
+                  { dataField: '_id', hidden: true },
+                  { dataField: 'firstName', text: 'User List' },
+                  { dataField: 'lastName', hidden: true }
+                ]}
+                onSearch={data => {
+                  onSearchManager(data, formik.setFieldValue);
                 }}
-              >
-                Reset
-              </Button>
-            </div>
-            <SearchModal
-              id="searchManager"
-              heading="Serach Manager"
-              showModal={showManagerModal}
-              onCloseModal={onCloseManagerModal}
-              data={managerList}
-              columns={[
-                { dataField: '_id', hidden: true },
-                { dataField: 'firstName', text: 'User List' },
-                { dataField: 'lastName', hidden: true }
-              ]}
-              onSearch={data => {
-                onSearchManager(data, formik.setFieldValue);
+              />
+            </form>
+          </Col>
+        </Row>
+        <hr />
+        <Row>
+          <Col xs={12} sm={6}>
+            <FormControl placeholder="Search" onChange={handleChange} className="mb-4" />
+          </Col>
+          <Col xs={12} sm={6}>
+            Sort By:
+            <Button
+              variant="outline-dark"
+              className={sortMode && startDateSort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('startDate');
+                setStartDateSort(true);
+                setEndDateSort(false);
+                setPrioritySort(false);
               }}
-            />
-          </form>
-        </Col>
-      </Row>
-      <hr />
-      <Row>
-        <Col>
-          {projects.length === 0 && (
-            <Alert variant="warning">Projects are not available in database!!</Alert>
-          )}
-          <ListGroup>
-            {projects.map(project => {
-              return (
-                <ListGroup.Item className="project-list" key={project._id}>
-                  <div>
-                    <p>Project : {project.projectName}</p>
+            >
+              Start Date
+            </Button>
+            <Button
+              variant="outline-dark"
+              className={sortMode && endDateSort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('endDate');
+                setStartDateSort(false);
+                setEndDateSort(true);
+                setPrioritySort(false);
+              }}
+            >
+              End Date
+            </Button>
+            <Button
+              variant="outline-dark"
+              className={sortMode && prioritySort ? 'active ml-2' : 'ml-2'}
+              onClick={() => {
+                handleSort('priority');
+                setStartDateSort(false);
+                setEndDateSort(false);
+                setPrioritySort(true);
+              }}
+            >
+              Priority
+            </Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {projects.length === 0 && (
+              <Alert variant="warning">Projects are not available in database!!</Alert>
+            )}
+            <ListGroup>
+              {projects.map(project => {
+                return (
+                  <ListGroup.Item className="project-list" key={project._id}>
                     <div>
-                      <span className="mr-2">
-                        Start Date : {project.startDate && formatDate(project.startDate)}
-                      </span>
-                      <span className="ml-5">
-                        End Date : {project.endDate && formatDate(project.endDate)}
-                      </span>
+                      <p>
+                        <label>Project : </label>
+                        {project.projectName}
+                      </p>
+                      <p>
+                        <label>Start Date : </label>
+                        {project.startDate && formatDate(project.startDate)}
+                      </p>
+                      <p>
+                        <label>End Date : </label>
+                        {project.endDate && formatDate(project.endDate)}
+                      </p>
+                      <div>
+                        <span className="mr-2">
+                          <label>No of tasks: </label>
+                          {project.task.length}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="mr-2">
+                          <label>Completed: </label>
+                          {getNumOfCompletedTask(project.task)}
+                        </span>
+                      </div>
                     </div>
+                    <ListGroup>
+                      <ListGroup.Item>Priority : {project.priority}</ListGroup.Item>
+                    </ListGroup>
                     <div>
-                      <span className="mr-2">No of tasks: {project.task.length}</span>
+                      <Button variant="dark" onClick={() => editProject(project)}>
+                        Update
+                      </Button>
+                      <br />
+                      <Button
+                        variant="light"
+                        className="mt-2"
+                        onClick={() => {
+                          deleteProject(project);
+                        }}
+                      >
+                        Suspend
+                      </Button>
                     </div>
-                    <div>
-                      <span className="mr-2">Completed: {getNumOfCompletedTask(project.task)}</span>
-                    </div>
-                  </div>
-                  <ListGroup>
-                    <ListGroup.Item>
-                      <p>Priority : </p> <p>{project.priority}</p>
-                    </ListGroup.Item>
-                  </ListGroup>
-                  <div>
-                    <Button variant="outline-primary" onClick={() => editProject(project)}>
-                      Update
-                    </Button>
-                    <br />
-                    <Button
-                      variant="outline-secondary"
-                      className="mt-2"
-                      onClick={() => {
-                        deleteProject(project);
-                      }}
-                    >
-                      Suspend
-                    </Button>
-                  </div>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
-        </Col>
-      </Row>
+                  </ListGroup.Item>
+                );
+              })}
+            </ListGroup>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };

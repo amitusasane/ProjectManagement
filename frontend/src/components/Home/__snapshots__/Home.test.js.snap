@@ -3,20 +3,21 @@
 exports[`Home Component Should render Home component 1`] = `
 <div>
   <div
-    class="container-fluid"
+    class="container"
   >
-    <div
-      class="wrap-container"
-    />
     <div
       class="row"
     >
       <div
-        class="jumbotron"
+        class="col"
       >
-        <h1>
-           Welcome to Project Management Tool!! 
-        </h1>
+        <div
+          class="mt-5 jumbotron"
+        >
+          <h1>
+             Welcome to Project Management Tool!! 
+          </h1>
+        </div>
       </div>
     </div>
   </div>

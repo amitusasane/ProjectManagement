@@ -6,12 +6,28 @@ exports[`Add Task Component Should render AddTask component 1`] = `
     class="container"
   >
     <div
+      class="mt-3 row"
+    >
+      <div
+        class="col"
+      >
+        <h3>
+          Manage Task
+        </h3>
+      </div>
+    </div>
+    <div
       class="row"
     >
       <div
         class="mt-3 col"
       >
         <form>
+          <label
+            class="form-label"
+          >
+            Search Project
+          </label>
           <div
             class="input-group"
           >
@@ -30,7 +46,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
               class="input-group-append"
             >
               <button
-                class="btn btn-outline-primary"
+                class="btn btn-outline-dark"
                 type="button"
               >
                 Search Project
@@ -40,6 +56,11 @@ exports[`Add Task Component Should render AddTask component 1`] = `
           <div
             class="invalid-feedback"
           />
+          <label
+            class="mt-2 form-label"
+          >
+            Task Name
+          </label>
           <input
             class="mb-2 mt-2 form-control"
             name="taskName"
@@ -67,7 +88,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
             </label>
           </div>
           <label
-            class="form-label"
+            class="mt-2 form-label"
           >
             Priority
           </label>
@@ -84,6 +105,11 @@ exports[`Add Task Component Should render AddTask component 1`] = `
             type="range"
             value=""
           />
+          <label
+            class="form-label"
+          >
+            Search Parent Task
+          </label>
           <div
             class="input-group"
           >
@@ -101,7 +127,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
               class="input-group-append"
             >
               <button
-                class="btn btn-outline-primary"
+                class="btn btn-outline-dark"
                 type="button"
               >
                 Search Parent Task
@@ -111,6 +137,11 @@ exports[`Add Task Component Should render AddTask component 1`] = `
           <div
             class="invalid-feedback"
           />
+          <label
+            class="mt-2 form-label"
+          >
+            Start Date
+          </label>
           <input
             class="mb-2 mt-2 form-control"
             name="startDate"
@@ -121,6 +152,11 @@ exports[`Add Task Component Should render AddTask component 1`] = `
           <div
             class="invalid-feedback"
           />
+          <label
+            class="mt-2 form-label"
+          >
+            End Date
+          </label>
           <input
             class="mb-2 mt-2 form-control"
             name="endDate"
@@ -131,6 +167,11 @@ exports[`Add Task Component Should render AddTask component 1`] = `
           <div
             class="invalid-feedback"
           />
+          <label
+            class="mt-2 form-label"
+          >
+            Search User
+          </label>
           <div
             class="input-group"
           >
@@ -149,7 +190,7 @@ exports[`Add Task Component Should render AddTask component 1`] = `
               class="input-group-append"
             >
               <button
-                class="btn btn-outline-primary"
+                class="btn btn-outline-dark"
                 type="button"
               >
                 Search User
@@ -160,17 +201,17 @@ exports[`Add Task Component Should render AddTask component 1`] = `
             class="invalid-feedback"
           />
           <div
-            class="float-right mt-4"
+            class="float-right mt-4 mb-4"
           >
             <button
-              class="ml-2 mr-2 btn btn-primary"
+              class="ml-2 mr-2 btn btn-dark"
               disabled=""
               type="submit"
             >
               Add
             </button>
             <button
-              class="btn btn-outline-secondary"
+              class="btn btn-light"
               type="button"
             >
               Reset

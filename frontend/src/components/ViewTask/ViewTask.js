@@ -80,6 +80,11 @@ const ViewTask = () => {
   return (
     <>
       <Container>
+        <Row className="mt-3">
+          <Col>
+            <h3>View Tasks</h3>
+          </Col>
+        </Row>
         {taskCompleted && (
           <Alert variant="info" className="mt-3" dismissible>
             Task mark as Completed.
@@ -95,7 +100,7 @@ const ViewTask = () => {
                 value={project.projectName}
               ></FormControl>
               <InputGroup.Append>
-                <Button variant="outline-primary" onClick={searchProject}>
+                <Button variant="outline-dark" onClick={searchProject}>
                   Search project
                 </Button>
               </InputGroup.Append>
@@ -118,7 +123,7 @@ const ViewTask = () => {
           <Col xs={12} sm={6}>
             Sort Task By:
             <Button
-              variant="outline-primary"
+              variant="outline-dark"
               className={sortMode && startDateSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
                 handleSort('startDate');
@@ -130,7 +135,7 @@ const ViewTask = () => {
               Start Date
             </Button>
             <Button
-              variant="outline-primary"
+              variant="outline-dark"
               className={sortMode && endDateSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
                 handleSort('endDate');
@@ -142,7 +147,7 @@ const ViewTask = () => {
               End Date
             </Button>
             <Button
-              variant="outline-primary"
+              variant="outline-dark"
               className={sortMode && prioritySort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
                 handleSort('priority');
@@ -158,7 +163,7 @@ const ViewTask = () => {
         {tasks.length > 0 ? (
           <Row>
             <Col>
-              <table className="table table-bordered mt-5">
+              <table className="table table-bordered mt-5 table-striped">
                 <thead>
                   <tr>
                     <th>Task</th>
@@ -179,11 +184,11 @@ const ViewTask = () => {
                         <td>{formatDate(task.startDate)}</td>
                         <td>{formatDate(task.endDate)}</td>
                         <td>
-                          <Button variant="outline-primary" onClick={() => editTask(task)}>
+                          <Button variant="dark" onClick={() => editTask(task)}>
                             Edit
                           </Button>
                           <Button
-                            variant="outline-primary"
+                            variant="outline-dark"
                             className="ml-2"
                             disabled={task.status === 'Completed'}
                             onClick={async e => {

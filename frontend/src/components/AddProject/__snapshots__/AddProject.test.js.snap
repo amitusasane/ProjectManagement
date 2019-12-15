@@ -3,23 +3,34 @@
 exports[`Add Project Component Should render AddProject component 1`] = `
 <div>
   <div
-    class="row"
+    class="container"
   >
     <div
-      class="mt-3 col"
+      class="mt-3 row"
     >
-      <form>
-        <div
-          class="form-group row"
-        >
-          <label
-            class="form-label col-form-label col-sm-2"
-          >
-            Project Name:
-          </label>
+      <div
+        class="col"
+      >
+        <h3>
+          Manage Project
+        </h3>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="mt-3 col"
+      >
+        <form>
           <div
-            class="col-sm-10"
+            class="form-group"
           >
+            <label
+              class="form-label"
+            >
+              Project Name
+            </label>
             <input
               class="mb-2 mt-2 form-control"
               name="projectName"
@@ -31,122 +42,177 @@ exports[`Add Project Component Should render AddProject component 1`] = `
               class="invalid-feedback"
             />
           </div>
-        </div>
-        <div
-          class="form-check"
-        >
-          <input
-            class="form-check-input"
-            name="dateRequired"
-            type="checkbox"
-            value="false"
-          />
-          <label
-            class="form-check-label"
-            title=""
+          <div
+            class="form-check"
           >
-            Set Start and End date
-          </label>
-        </div>
-        <input
-          class="mb-2 mt-2 form-control"
-          disabled=""
-          name="startDate"
-          placeholder="Start Date"
-          type="date"
-          value="2019-12-14"
-        />
-        <div
-          class="invalid-feedback"
-        />
-        <input
-          class="mb-2 mt-2 form-control"
-          disabled=""
-          name="endDate"
-          placeholder="End Date"
-          type="date"
-          value="2019-12-15"
-        />
-        <div
-          class="invalid-feedback"
-        />
-        <input
-          class="mb-2 mt-2 form-control"
-          max="30"
-          min="0"
-          name="priority"
-          placeholder="priority"
-          step="1"
-          type="range"
-          value=""
-        />
-        <div
-          class="invalid-feedback"
-        />
-        <div
-          class="input-group"
-        >
+            <input
+              class="form-check-input"
+              name="dateRequired"
+              type="checkbox"
+              value="false"
+            />
+            <label
+              class="form-check-label"
+              title=""
+            >
+              Set Start and End date
+            </label>
+          </div>
           <label
-            class="modal-label form-label"
-          />
+            class="mt-2 form-label"
+          >
+            Start Date
+          </label>
           <input
-            class="mb-2 mt-2 form-control-plaintext"
-            hidden=""
-            name="manager"
-            readonly=""
-            required=""
+            class="mb-2 mt-2 form-control"
+            disabled=""
+            name="startDate"
+            placeholder="Start Date"
+            type="date"
+            value="2019-12-14"
+          />
+          <div
+            class="invalid-feedback"
+          />
+          <label
+            class="form-label"
+          >
+            End Date
+          </label>
+          <input
+            class="mb-2 mt-2 form-control"
+            disabled=""
+            name="endDate"
+            placeholder="End Date"
+            type="date"
+            value="2019-12-15"
+          />
+          <div
+            class="invalid-feedback"
+          />
+          <label
+            class="mt-2 form-label"
+          >
+            Priority
+          </label>
+          <input
+            class="mb-2 mt-2 form-control"
+            max="30"
+            min="0"
+            name="priority"
+            placeholder="priority"
+            step="1"
+            type="range"
             value=""
           />
           <div
-            class="input-group-append"
+            class="invalid-feedback"
+          />
+          <label
+            class="form-label"
+          >
+            Search Manager
+          </label>
+          <div
+            class="input-group"
+          >
+            <label
+              class="modal-label form-label"
+            />
+            <input
+              class="mb-2 mt-2 form-control-plaintext"
+              hidden=""
+              name="manager"
+              readonly=""
+              required=""
+              value=""
+            />
+            <div
+              class="input-group-append"
+            >
+              <button
+                class="btn btn-outline-dark"
+                type="button"
+              >
+                Search Manager
+              </button>
+            </div>
+          </div>
+          <div
+            class="invalid-feedback"
+          />
+          <div
+            class="float-right mt-4"
           >
             <button
-              class="btn btn-primary"
+              class="ml-2 mr-2 btn btn-dark"
+              disabled=""
+              type="submit"
+            >
+              Add
+            </button>
+            <button
+              class="btn btn-light"
               type="button"
             >
-              Search Manager
+              Reset
             </button>
           </div>
-        </div>
-        <div
-          class="invalid-feedback"
-        />
-        <div
-          class="float-right mt-4"
-        >
-          <button
-            class="ml-2 mr-2 btn btn-primary"
-            disabled=""
-            type="submit"
-          >
-            Add
-          </button>
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-          >
-            Reset
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
-  <hr />
-  <div
-    class="row"
-  >
+    <hr />
     <div
-      class="col"
+      class="row"
     >
       <div
-        class="fade alert alert-warning show"
-        role="alert"
+        class="col-sm-6 col-12"
       >
-        Projects are not available in database!!
+        <input
+          class="mb-4 form-control"
+          placeholder="Search"
+        />
       </div>
       <div
-        class="list-group"
-      />
+        class="col-sm-6 col-12"
+      >
+        Sort By:
+        <button
+          class="ml-2 btn btn-outline-dark"
+          type="button"
+        >
+          Start Date
+        </button>
+        <button
+          class="ml-2 btn btn-outline-dark"
+          type="button"
+        >
+          End Date
+        </button>
+        <button
+          class="ml-2 btn btn-outline-dark"
+          type="button"
+        >
+          Priority
+        </button>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div
+        class="col"
+      >
+        <div
+          class="fade alert alert-warning show"
+          role="alert"
+        >
+          Projects are not available in database!!
+        </div>
+        <div
+          class="list-group"
+        />
+      </div>
     </div>
   </div>
 </div>

@@ -1,15 +1,18 @@
 import React from 'react';
 import { Row, Col, Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-
+import './HeaderNav.scss';
 const HeaderNav = () => {
   return (
     <>
       <Row className="no-gutters">
         <Col>
-          <Navbar bg="light" expand="lg" variant="light">
+          <Navbar bg="dark" expand="lg" variant="dark">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
+              <a className="navbar-brand" href="/">
+                PM Tool
+              </a>
               <Nav className="mr-auto pull-right">
                 <LinkContainer to="/addproject">
                   <Nav.Link>Add project</Nav.Link>
