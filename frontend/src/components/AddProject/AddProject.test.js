@@ -3,6 +3,7 @@ import { MemoryRouter as Router } from 'react-router-dom';
 import { render, cleanup, wait, fireEvent } from '@testing-library/react';
 import { toBeDisabled, toBeEmpty } from '@testing-library/jest-dom';
 expect.extend({ toBeDisabled, toBeEmpty });
+
 import AddProject from './AddProject';
 
 import axios from 'axios';
@@ -101,6 +102,17 @@ describe('Add Project Component', () => {
     expect(getByText('Projects are not available in database!!'));
   });
 
+  it('Should able to Search Manager', async () => {
+    const { container, getByText, getByTestId } = render(
+      <Router>
+        <AddProject />
+      </Router>
+    );
+    const serachManagerBtn = getByTestId('searchManagerBtn');
+    expect(serachManagerBtn).not.toBeDisabled();
+    fireEvent.click(serachManagerBtn);
+  });
+
   it('Should able to Suspend Project ', async () => {
     const { container, getByText, getByPlaceholderText } = render(
       <Router>
@@ -133,8 +145,6 @@ describe('Add Project Component', () => {
     fireEvent.change(projectName, { target: { name: 'projectName', value: fakeProjectName } });
     expect(updateProjectBtn).not.toBeDisabled();
     fireEvent.click(updateProjectBtn);
-    //axios.post.mockResolvedValue({ message: 'User updated successfully' });
-    //expect(getByText('User updated successfully'));
   });
 
   it('Should able to Reset Project Form ', async () => {
@@ -163,6 +173,7 @@ describe('Add Project Component', () => {
     });
     expect(getByText('Project 01'));
   });
+
   it('Should able to click on sorting options ', async () => {
     const { container, getByText, getByTestId } = render(
       <Router>

@@ -69,7 +69,7 @@ exports[`Add Project Component Should render AddProject component 1`] = `
             name="startDate"
             placeholder="Start Date"
             type="date"
-            value="2019-12-14"
+            value="2019-12-15"
           />
           <div
             class="invalid-feedback"
@@ -85,7 +85,7 @@ exports[`Add Project Component Should render AddProject component 1`] = `
             name="endDate"
             placeholder="End Date"
             type="date"
-            value="2019-12-15"
+            value="2019-12-16"
           />
           <div
             class="invalid-feedback"
@@ -132,6 +132,7 @@ exports[`Add Project Component Should render AddProject component 1`] = `
             >
               <button
                 class="btn btn-outline-dark"
+                data-testid="searchManagerBtn"
                 type="button"
               >
                 Search Manager

@@ -361,7 +361,11 @@ const AddProject = () => {
                   {...formik.getFieldProps('manager')}
                 ></FormControl>
                 <InputGroup.Append>
-                  <Button onClick={searchManager} variant="outline-dark">
+                  <Button
+                    data-testid="searchManagerBtn"
+                    onClick={searchManager}
+                    variant="outline-dark"
+                  >
                     Search Manager
                   </Button>
                 </InputGroup.Append>
