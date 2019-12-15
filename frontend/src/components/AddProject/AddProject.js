@@ -370,6 +370,7 @@ const AddProject = () => {
 
               <div className="float-right mt-4">
                 <Button
+                  data-testid="updateProject"
                   variant="dark"
                   disabled={!formik.isValid || !formik.dirty}
                   type="submit"
@@ -413,6 +414,7 @@ const AddProject = () => {
           <Col xs={12} sm={6}>
             Sort By:
             <Button
+              data-testid="sortStartDate"
               variant="outline-dark"
               className={sortMode && startDateSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
@@ -425,6 +427,7 @@ const AddProject = () => {
               Start Date
             </Button>
             <Button
+              data-testid="sortEndDate"
               variant="outline-dark"
               className={sortMode && endDateSort ? 'active ml-2' : 'ml-2'}
               onClick={() => {
@@ -437,6 +440,7 @@ const AddProject = () => {
               End Date
             </Button>
             <Button
+              data-testid="sortPriority"
               variant="outline-dark"
               className={sortMode && prioritySort ? 'active ml-2' : 'ml-2'}
               onClick={() => {

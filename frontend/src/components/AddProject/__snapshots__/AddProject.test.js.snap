@@ -146,6 +146,7 @@ exports[`Add Project Component Should render AddProject component 1`] = `
           >
             <button
               class="ml-2 mr-2 btn btn-dark"
+              data-testid="updateProject"
               disabled=""
               type="submit"
             >
@@ -179,18 +180,21 @@ exports[`Add Project Component Should render AddProject component 1`] = `
         Sort By:
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortStartDate"
           type="button"
         >
           Start Date
         </button>
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortEndDate"
           type="button"
         >
           End Date
         </button>
         <button
           class="ml-2 btn btn-outline-dark"
+          data-testid="sortPriority"
           type="button"
         >
           Priority
@@ -204,14 +208,78 @@ exports[`Add Project Component Should render AddProject component 1`] = `
         class="col"
       >
         <div
-          class="fade alert alert-warning show"
-          role="alert"
-        >
-          Projects are not available in database!!
-        </div>
-        <div
           class="list-group"
-        />
+        >
+          <div
+            class="project-list list-group-item"
+          >
+            <div>
+              <p>
+                <label>
+                  Project : 
+                </label>
+                Project 01
+              </p>
+              <p>
+                <label>
+                  Start Date : 
+                </label>
+                2019-12-13
+              </p>
+              <p>
+                <label>
+                  End Date : 
+                </label>
+                2019-12-20
+              </p>
+              <div>
+                <span
+                  class="mr-2"
+                >
+                  <label>
+                    No of tasks: 
+                  </label>
+                  1
+                </span>
+              </div>
+              <div>
+                <span
+                  class="mr-2"
+                >
+                  <label>
+                    Completed: 
+                  </label>
+                  1
+                </span>
+              </div>
+            </div>
+            <div
+              class="list-group"
+            >
+              <div
+                class="list-group-item"
+              >
+                Priority : 
+                24
+              </div>
+            </div>
+            <div>
+              <button
+                class="btn btn-dark"
+                type="button"
+              >
+                Update
+              </button>
+              <br />
+              <button
+                class="mt-2 btn btn-light"
+                type="button"
+              >
+                Suspend
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
